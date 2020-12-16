@@ -58,7 +58,7 @@ buildDevelop:
       - develop
 
 test:
-    image: manojmanivannan18/python-liveisstracker:pytest
+    image: manojmanivannan18/python-hellomaven:pytest
     stage: test
     before_script:
       - source ~/.bashrc    
