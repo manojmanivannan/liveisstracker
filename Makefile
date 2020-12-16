@@ -157,7 +157,7 @@ launch:
 
 
 help:
-	@printf "$(BOLDYELLOW)Main targets:$(ENDC) $(BOLDCYAN)LIVE_ISS_TRACKER$(ENDC)\n"
+	@printf "$(BOLDYELLOW)Main targets:$(ENDC) $(BOLDCYAN)Live ISS Tracker$(ENDC)\n"
 	@printf "$(OKGREEN)clean     		$(ENDC): Clean mvn target folder\n"
 	@printf "$(OKGREEN)stop      		$(ENDC): Stop all containers and bring down docker-compose if up\n"
 	@printf "$(OKGREEN)dk_compose_tests	$(ENDC): Launch the application successfully in docker-compose mode\n"
