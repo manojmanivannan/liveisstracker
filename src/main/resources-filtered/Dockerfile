@@ -1,4 +1,4 @@
-FROM manojmanivannan18/python-liveisstracker:python
+FROM manojmanivannan18/python-hellomaven:python
 MAINTAINER ManojManivannan
 
 COPY entrypoint.sh /tmp/

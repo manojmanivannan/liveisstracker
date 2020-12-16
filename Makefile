@@ -47,7 +47,7 @@ prepare_py_container:
 	@docker pull manojmanivannan18/python-hellomaven:python; EXIT_CODE=$$?; \
 	if [ "$$EXIT_CODE" -eq 0 ]; then \
 		printf "[$(OKGREEN)INFO$(ENDC)] Starting up python container\n"; \
-		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" --name python_app "$(REGISTRY_URL)":"python" bash \
+		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" --name python_app "$(REGISTRY_URL)":"python-live" bash \
 		|| printf "[$(FAIL)ERROR$(ENDC)] Unable to run/start the python container\n" || exit 1;\
 	else \
 		printf "[$(FAIL)FAIL$(ENDC)] Unable to pull docker image for Python app base\n"; \
