@@ -2,7 +2,7 @@
 TOPDIR=.
 
 MAVEN_COMPOSE_ARGS:= \
-		-Denv.GITLAB_REPO_URL=registry.gitlab.com/manojmanivannan \
+		-Denv.GITLAB_REPO_URL=registry.gitlab.com/manojm18 \
 		-Pgitlab-resource
 
 OKGREEN := \033[32m
@@ -148,7 +148,8 @@ launch:
 	@docker stop python_app || printf "[$(OKGREEN)INFO$(ENDC)] No containers to stop\n"
 	@docker pull "$(REPO_URL)/liveisstracker:$(branch_snapshot_name)"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
-		printf "[$(FAIL)ERROR$(ENDC)] No image for current branch. Build image first\n"; exit 1; \
+		printf "[$(WARNING)WARN$(ENDC)] No registry image for current branch. Build image first !\n"; \
+		printf "[$(OKGREEN)INFO$(ENDC)] Using local image if present.\n"; \
 		fi;
 	@$$(sed -i 's#image: gitlab_registry.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
 	@docker-compose up -d
