@@ -1,0 +1,9 @@
+/target
+.project
+.pydevproject
+.classpath
+/.settings
+/builds
+config.toml
+/.idea
+/venv

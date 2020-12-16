@@ -1,0 +1,194 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.manojm18</groupId>
+	<artifactId>liveISStracker</artifactId>
+	<version>0.0.2</version>
+
+	<repositories>
+		<repository>
+			<id>confluent</id>
+			<url>http://packages.confluent.io/maven/</url>
+		</repository>
+	</repositories>
+
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.build.timestamp.format>MM.dd.HHmm</maven.build.timestamp.format>
+		<python_package>liveisstracker</python_package>
+		<description>Sample Python Project build using Maven and CI/CD</description>
+		<author>Manoj Manivannan</author>
+        <python_version>${project.version}</python_version>
+		<author_email>manojm18@live.in</author_email>
+		<source_url>https://gitlab.com/manojm18</source_url>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<dependencies>
+					<dependency>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation-api</artifactId>
+						<version>1.2.0</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>javax.xml.bind</groupId>
+						<artifactId>jaxb-api</artifactId>
+						<version>2.3.1</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>build-image</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<tag>${docker.full.version}</tag>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>tag-image-version</id>
+						<goals>
+							<goal>tag</goal>
+						</goals>
+						<configuration>
+                            				<tag>${docker.full.version}</tag>
+						</configuration>
+                    </execution>
+
+					<execution>
+						<id>push-image-version</id>
+						<goals>
+							<goal>push</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<tag>${docker.full.version}</tag>
+                        </configuration>
+					</execution>
+
+
+
+
+
+
+				</executions>
+				<configuration>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<repository>${docker.push.url}/${python_package}</repository>
+					<username>${docker.push.user}</username>
+					<password>${docker.push.pass}</password>
+					<contextDirectory>${project.build.directory}/generated-sources/${python_package}</contextDirectory>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<id>generate-package</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>python3</executable>
+							<workingDirectory>${project.build.directory}/generated-sources/${python_package}</workingDirectory>
+							<arguments>
+								<argument>setup.py</argument>
+								<argument>sdist</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>setup.py</include>
+					<include>MANIFEST.in</include>
+					<include>README.rst</include>
+				</includes>
+				<targetPath>${project.build.directory}/generated-sources/${python_package}</targetPath>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources/basemap</directory>
+				<includes>
+					<include>basemap-master.zip</include>
+				</includes>
+				<targetPath>${project.build.directory}/generated-sources/${python_package}/basemap</targetPath>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${python_package}</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+				<targetPath>${project.build.directory}/generated-sources/${python_package}/${python_package}</targetPath>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>requirements.txt</include>
+					<include>entrypoint.sh</include>
+				</includes>
+				<targetPath>${project.build.directory}/generated-sources/${python_package}</targetPath>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources-filtered</directory>
+				<includes>
+					<include>Dockerfile</include>
+				</includes>
+				<targetPath>${project.build.directory}/generated-sources/${python_package}</targetPath>
+				<filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources/db</directory>
+                <includes>
+                    <include>init.sql</include>
+                </includes>
+                <targetPath>${project.build.directory}/generated-sources/db</targetPath>
+                <filtering>false</filtering>
+            </resource>
+		</resources>
+	</build>
+
+<distributionManagement>
+  <repository>
+    <id>central</id>
+    <name>GITLAB</name>
+    <url>${docker.push.url}</url>
+  </repository>
+</distributionManagement>
+
+</project>

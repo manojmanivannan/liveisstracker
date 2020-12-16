@@ -1,0 +1,74 @@
+image: manojmanivannan18/python-hellomaven:build
+
+before_script:
+  - source ~/.bashrc
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+
+services:
+  - name: docker:18-dind
+    alias: docker
+
+cache:
+ paths:
+   - target/
+   - .m2/
+
+
+stages:
+  - test
+  - build
+
+.BuildPackage:
+  stage: build
+  artifacts:
+    paths:
+      - target/generated-sources/liveisstracker/dist/
+      - .m2/current_branch_snapshot
+    expire_in: 1 week
+
+buildTagged:
+  extends: .BuildPackage
+  script:
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true --get_version > .m2/current_branch_snapshot
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true
+  only:
+      - tags
+
+
+buildFeatureOrBugfix:
+  extends: .BuildPackage
+  script:
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --get_version > .m2/current_branch_snapshot
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME}
+  except:
+      - tags
+      - develop
+
+buildDevelop:
+  extends: .BuildPackage
+  script:
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH} --get_version > .m2/current_branch_snapshot
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH}
+  only:
+      - develop
+
+test:
+    image: manojmanivannan18/python-liveisstracker:pytest
+    stage: test
+    before_script:
+      - source ~/.bashrc    
+    script:
+      - docker login -u ${GITLAB_REPO_USER} -p ${GITLAB_REPO_PASS} ${GITLAB_REPO_URL}
+      - make run_python_tests TEST_USER=ROOT
+    after_script:
+      - docker stop python_app && docker rm python_app
+    artifacts:
+      when: always
+      reports:
+        junit: target/generated-sources/liveisstracker/liveisstracker/report.xml
+
