@@ -63,7 +63,6 @@ test:
     before_script:
       - source ~/.bashrc    
     script:
-      - docker login -u ${GITLAB_REPO_USER} -p ${GITLAB_REPO_PASS} ${GITLAB_REPO_URL}
       - make run_python_tests TEST_USER=ROOT
     after_script:
       - docker stop python_app && docker rm python_app
