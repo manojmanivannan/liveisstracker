@@ -9,7 +9,7 @@ The resulting Geo coordinates are plot using matplotlib.
 from time import sleep
 import urllib.request as url
 from urllib.error import URLError
-import json, time
+import json
 try:
     from dbsql.dbconnections import *
 except ModuleNotFoundError:
@@ -25,6 +25,9 @@ from datetime import datetime
 from geopy.geocoders import Nominatim
 import streamlit as st
 import sys
+from streamlit.ReportThread import add_report_ctx
+from threading import currentThread
+from LoopClass import LoopTh
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
@@ -190,7 +193,7 @@ def main():
         a = TrackerISS()
         b = BasemapPlot(home_name,home_lat,home_lon)
         while True:
-            time.sleep(5)
+            sleep(5)
             b.plot_location(a.get_speed_iss_pos())
 
     except Exception as e:
@@ -204,4 +207,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    global map_type
+    map_type = "Orthogonal"
+    thread = LoopTh(target=main,)
+    add_report_ctx(thread)
+    thread.start()
+    # Sleep few seconds for the thread to initialize before proceeding
+    sleep(3)
+    map_type = st.sidebar.selectbox("Map type", ("Orthogonal","Flat"))
+    thread.join()
+    

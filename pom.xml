@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>MM.dd.HHmm</maven.build.timestamp.format>
 		<python_package>liveisstracker</python_package>
-		<description>Sample Python Project build using Maven and CI/CD</description>
+		<description>Live Internation Space Station tracker python application</description>
 		<author>Manoj Manivannan</author>
         <python_version>${project.version}</python_version>
 		<author_email>manojm18@live.in</author_email>
@@ -70,13 +70,14 @@
 
 					<execution>
 						<id>tag-image-version</id>
+						<phase>package</phase>
 						<goals>
 							<goal>tag</goal>
 						</goals>
 						<configuration>
                             				<tag>${docker.full.version}</tag>
 						</configuration>
-                    </execution>
+                    			</execution>
 
 					<execution>
 						<id>push-image-version</id>
@@ -86,14 +87,8 @@
 						<phase>package</phase>
 						<configuration>
 							<tag>${docker.full.version}</tag>
-                        </configuration>
+                        			</configuration>
 					</execution>
-
-
-
-
-
-
 				</executions>
 				<configuration>
 					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
@@ -138,14 +133,6 @@
 				</includes>
 				<targetPath>${project.build.directory}/generated-sources/${python_package}</targetPath>
 				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/resources/basemap</directory>
-				<includes>
-					<include>basemap-master.zip</include>
-				</includes>
-				<targetPath>${project.build.directory}/generated-sources/${python_package}/basemap</targetPath>
-				<filtering>false</filtering>
 			</resource>
 			<resource>
 				<directory>src/main/resources/${python_package}</directory>
