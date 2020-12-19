@@ -9,7 +9,7 @@ The resulting Geo coordinates are plot using matplotlib.
 from time import sleep
 import urllib.request as url
 from urllib.error import URLError
-import json
+import json, os
 try:
     from dbsql.dbconnections import *
 except ModuleNotFoundError:
@@ -28,6 +28,16 @@ import sys
 from streamlit.ReportThread import add_report_ctx
 from threading import currentThread
 from LoopClass import LoopTh
+import pickle
+import logging
+#FORMAT = '%(asctime)s - %(levelname)s %(message)s'
+#logging.basicConfig(format=FORMAT)
+logger = logging.getLogger('LiveISStracker')
+logger.propagate = False
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
@@ -124,31 +134,47 @@ class TrackerISS:
 
 class BasemapPlot:
 
-    def __init__(self, home_name,home_latitude, home_longitude):
+    def __init__(self, home_name,home_latitude, home_longitude, map_type):
 
         self.home_name = home_name
         self.home_latitude = home_latitude
         self.home_longitude = home_longitude
+        self.map_type = map_type
 
         # self.gps_location = gps_location
 
         figure, ax = plt.subplots(num="ISS Tracker",figsize=(14,8))
         self.the_plot = st.pyplot(plt,clear_figure=True)
 
-    def create_plot(self):
+    def create_plot(self,projection_type):
         self.gps_location = TrackerISS.get_iss_lat_lon()
 
         try:
-            self.m = Basemap(projection='ortho',
-                lat_0=self.gps_location['latitude'],
-                lon_0=self.gps_location['longitude'],
-                resolution='c')
-            self.m.fillcontinents(color='coral',lake_color='aqua')
-            # draw parallels and meridians
-            self.m.drawparallels(np.arange(-90.,91.,30.))
-            self.m.drawmeridians(np.arange(-180.,181.,60.))
-            self.m.drawcountries()
-            self.m.drawmapboundary(fill_color='aqua')
+            if projection_type == 'mill':
+                logger.info('Projection type = mill')
+                if os.path.isfile('millmap.pickle'):
+                    self.m = pickle.load(open('millmap.pickle','rb'))
+                else:
+                    self.m = Basemap(projection=projection_type,resolution='c')
+                    self.m.fillcontinents(color='coral',lake_color='aqua')
+                    # draw parallels and meridians
+                    #self.m.drawparallels(np.arange(-90.,91.,30.))
+                    #self.m.drawmeridians(np.arange(-180.,181.,60.))
+                    self.m.drawcountries()
+                    self.m.drawmapboundary(fill_color='aqua')
+                    pickle.dump(self.m,open('millmap.pickle','wb'),-1)
+            else:
+                self.m = Basemap(projection=projection_type,
+                        lat_0=self.gps_location['latitude'],
+                        lon_0=self.gps_location['longitude'],
+                        resolution='c')
+
+                self.m.fillcontinents(color='coral',lake_color='aqua')
+                # draw parallels and meridians
+                self.m.drawparallels(np.arange(-90.,91.,30.))
+                self.m.drawmeridians(np.arange(-180.,181.,60.))
+                self.m.drawcountries()
+                self.m.drawmapboundary(fill_color='aqua')
             return self
         except Exception as e:
             print('Failure in basemap',e)
@@ -157,8 +183,13 @@ class BasemapPlot:
 
         speed = speed_iss_pos[0]
         iss = speed_iss_pos[1]
-
-        self.create_plot()
+        if self.map_type == 'Orthogonal':
+            self.create_plot(projection_type='ortho')
+            # pickle.dump(self.m,open('map.pickle','wb'),-1)
+        else:
+            self.create_plot(projection_type='mill')
+            #self.m = pickle.load(open('map.pickle','rb'))
+            #self.gps_location = TrackerISS.get_iss_lat_lon()
         x_pt, y_pt = self.m(self.gps_location['longitude'],self.gps_location['latitude'])
         self.point = self.m.plot(x_pt, y_pt,'bo')[0]
         self.point.set_data(x_pt,y_pt)
@@ -185,16 +216,18 @@ class BasemapPlot:
         self.the_plot.pyplot(plt,clear_figure=True)
 
 def main():
+    logger.info('Starting thread')
             
     try:
         st.title('International Space Station Tracker')
+        map_type = st.selectbox('Map type',('Flat','Orthogonal'))
         home_name_st = st.text_input('Home')
         home_name = home_name_st if home_name_st else 'Modena'
         a = TrackerISS()
-        b = BasemapPlot(home_name,home_lat,home_lon)
+        b = BasemapPlot(home_name,home_lat,home_lon,map_type)
         while True:
             sleep(5)
-            b.plot_location(a.get_speed_iss_pos())
+            b.plot_location(speed_iss_pos = a.get_speed_iss_pos())
 
     except Exception as e:
         print('Failed {}'.format(e), file=sys.stderr )
@@ -203,17 +236,14 @@ def main():
 
 
 
-
+map_type = ''
 
 
 if __name__ == '__main__':
-    global map_type
-    map_type = "Orthogonal"
     thread = LoopTh(target=main,)
     add_report_ctx(thread)
     thread.start()
     # Sleep few seconds for the thread to initialize before proceeding
     sleep(3)
-    map_type = st.sidebar.selectbox("Map type", ("Orthogonal","Flat"))
     thread.join()
     

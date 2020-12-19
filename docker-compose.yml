@@ -12,6 +12,9 @@ services:
       - db
     ports:
       - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
 
   db:
     image: mysql:5.7

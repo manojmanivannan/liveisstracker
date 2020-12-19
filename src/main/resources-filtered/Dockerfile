@@ -36,4 +36,4 @@ USER manoj
 
 WORKDIR /home/manoj/${python_package}
 EXPOSE 8501
-CMD ["streamlit","run","track_iss.py"]
+CMD ["streamlit","run","TrackISS.py"]
