@@ -149,7 +149,7 @@
 					<include>entrypoint.sh</include>
 				</includes>
 				<targetPath>${project.build.directory}/generated-sources/${python_package}</targetPath>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 			</resource>
 			<resource>
 				<directory>src/main/resources-filtered</directory>
