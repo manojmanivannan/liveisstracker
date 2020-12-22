@@ -167,6 +167,14 @@
                 <targetPath>${project.build.directory}/generated-sources/db</targetPath>
                 <filtering>false</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources/nginx</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>${project.build.directory}/generated-sources/nginx</targetPath>
+                <filtering>false</filtering>
+            </resource>
 		</resources>
 	</build>
 

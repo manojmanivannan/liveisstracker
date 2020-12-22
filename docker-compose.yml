@@ -29,6 +29,14 @@ services:
         test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
         timeout: 10s
         retries: 10
+  nginx:
+    build: ./target/generated-sources/nginx/
+    ports: 
+        - "80:80"
+    restart: always
+    depends_on:
+        - app
+
 
 volumes:
   mysqldb:
