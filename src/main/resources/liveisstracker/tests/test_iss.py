@@ -1,5 +1,5 @@
 from unittest import TestCase, TextTestRunner, defaultTestLoader
-from liveisstracker.track_iss import TrackerISS
+from liveisstracker.TrackISS import TrackerISS
 from urllib.error import URLError
 
 ###### MODENA #######################
