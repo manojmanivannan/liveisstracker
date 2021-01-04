@@ -23,11 +23,11 @@ then go to your web browser at ```localhost:8501``` to view the application
 ## Help
 Check other targets using help ```make help```
 ```
-Main targets: LIVE_ISS_TRACKER
+Main targets: Live ISS Tracker
 clean                   : Clean mvn target folder
 stop                    : Stop all containers and bring down docker-compose if up
 dk_compose_tests        : Launch the application successfully in docker-compose mode
-run_python_tests        : Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass.
+run_python_tests        : Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass, TEST_USER=manoj if you wish to run locally
 run_streamlit           : Runs the Streamlit server on the container.
 package                 : Builds docker images and pushes to GITLAB registry
 deep_clean              : Cleans mvn target folder, removes docker volumes, containers and images matching 'liveisstracker'

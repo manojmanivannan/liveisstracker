@@ -33,7 +33,7 @@ endif
 
 test_user_name=
 ifdef TEST_USER
-override test_user_name=-uroot
+override test_user_name=-u$(TEST_USER)
 endif
 
 REPO_URL := registry.gitlab.com/manojm18
@@ -161,7 +161,7 @@ help:
 	@printf "$(OKGREEN)clean     		$(ENDC): Clean mvn target folder\n"
 	@printf "$(OKGREEN)stop      		$(ENDC): Stop all containers and bring down docker-compose if up\n"
 	@printf "$(OKGREEN)dk_compose_tests	$(ENDC): Launch the application successfully in docker-compose mode\n"
-	@printf "$(OKGREEN)run_python_tests	$(ENDC): Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass.\n"
+	@printf "$(OKGREEN)run_python_tests	$(ENDC): Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass, TEST_USER=manoj if you wish to run locally\n"
 	@printf "$(OKGREEN)run_streamlit		$(ENDC): Runs the Streamlit server on the container.\n"
 	@printf "$(OKGREEN)package   		$(ENDC): Builds docker images and pushes to GITLAB registry\n"
 	@printf "$(OKGREEN)deep_clean		$(ENDC): Cleans mvn target folder, removes docker volumes, containers and images matching 'liveisstracker'\n"
