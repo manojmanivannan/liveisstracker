@@ -63,7 +63,7 @@ test:
     before_script:
       - source ~/.bashrc    
     script:
-      - make run_python_tests TEST_USER=ROOT
+      - make run_python_tests TEST_USER=root
     after_script:
       - docker stop python_app && docker rm python_app
     artifacts:
