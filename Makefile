@@ -149,7 +149,7 @@ launch:
 	@docker pull "$(REPO_URL)/liveisstracker:$(branch_snapshot_name)"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
 		printf "[$(WARNING)WARN$(ENDC)] No registry image for current branch. Build image first !\n"; \
-		printf "[$(OKGREEN)INFO$(ENDC)] Using local image if present.\n"; \
+		printf "[$(OKGREEN)INFO$(ENDC)] Using local image if present.\n"; exit 1; \
 		fi;
 	@$$(sed -i 's#image: gitlab_registry.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
 	@docker-compose up -d
