@@ -25,6 +25,7 @@ from datetime import datetime
 from geopy.geocoders import Nominatim
 import streamlit as st
 import sys
+from page_information import information
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
@@ -185,6 +186,8 @@ def main():
             
     try:
         st.title('International Space Station Tracker')
+        st.markdown(information['header1'])
+        st.mardkwon(information['intro'])
         home_name_st = st.text_input('Home')
         home_name = home_name_st if home_name_st else 'Modena'
         a = TrackerISS()
