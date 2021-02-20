@@ -20,12 +20,23 @@ import matplotlib.pyplot as plt
 plt.rcParams['animation.ffmpeg_path'] = '/usr/bin/ffmpeg' # point to the extracted exe file of ffmpeg
 import matplotlib.animation as animate
 import numpy as np
+import pandas as pd
 from geopy.distance import geodesic
 from datetime import datetime
 from geopy.geocoders import Nominatim
 import streamlit as st
 import sys
 from page_information import information
+
+import logging
+#FORMAT = '%(asctime)s - %(levelname)s %(message)s'
+#logging.basicConfig(format=FORMAT)
+logger = logging.getLogger('LiveISStracker')
+logger.propagate = False
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
@@ -187,7 +198,11 @@ def main():
     try:
         st.title('International Space Station Tracker')
         st.markdown(information['header1'])
-        st.mardkwon(information['intro'])
+        st.markdown(information['what'])
+        st.markdown(information['intro_source'])
+        st.markdown(information['header2'])
+        st.table(pd.DataFrame.from_dict(information['tech_spec'],orient='index',columns=['Properties']))
+        st.markdown(information['intro_source'])
         home_name_st = st.text_input('Home')
         home_name = home_name_st if home_name_st else 'Modena'
         a = TrackerISS()
