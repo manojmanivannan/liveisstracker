@@ -47,7 +47,8 @@ def get_home_location(home_name):
 
     if not location:
         logger.error(f'"{home_name}" is not a valid city name')
-        raise Exception('ERROR')
+        st.write('Not a valid location')
+        raise Exception(': Streamlit not RUNNING')
     
     logger.info(location.address)
     logger.info("Latitude: "+location.raw['lat'])
