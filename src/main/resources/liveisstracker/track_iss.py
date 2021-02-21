@@ -221,7 +221,8 @@ def main():
             b.plot_location(a.get_speed_iss_pos())
 
     except Exception as e:
-        print('Failed {}'.format(e), file=sys.stderr )
+        logger.error('Failed {}'.format(e), file=sys.stderr )
+        raise Exception(e)
 
 
 
