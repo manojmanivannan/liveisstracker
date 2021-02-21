@@ -6,7 +6,7 @@ This script plots the ground position of international space station on a spheri
 The location of ISS is obtained from 'http://api.open-notify.org/iss-now.json'
 The resulting Geo coordinates are plot using matplotlib.
 """
-from time import sleep
+from time import sleep, ctime
 import urllib.request as url
 from urllib.error import URLError
 import json, time
@@ -33,6 +33,7 @@ import logging
 #logging.basicConfig(format=FORMAT)
 logger = logging.getLogger('LiveISStracker')
 logger.propagate = False
+logger.setLevel('INFO')
 ch = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
@@ -40,13 +41,19 @@ logger.addHandler(ch)
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
-###### MODENA #######################
-#home_name="MODENA"
-home_lat=44.6501557
-home_lon=10.8516923
-#####################################
-count = 0
-#####################################
+
+def get_home_location(home_name):
+    location = geolocator.geocode(home_name)
+
+    if not location:
+        logger.error(f'"{home_name}" is not a valid city name')
+        raise Exception('ERROR')
+    
+    logger.info(location.address)
+    logger.info("Latitude: "+location.raw['lat'])
+    logger.info("Longitude: "+location.raw['lon'])
+
+    return location.address, location.raw['lat'], location.raw['lon']
 
 class TrackerISS:
 
@@ -93,6 +100,7 @@ class TrackerISS:
             geo_location = json_res['iss_position']
             timestamp = json_res['timestamp']
             lon, lat = float(geo_location['longitude']), float(geo_location['latitude'])
+            logger.debug(f"Current ISS location at {ctime(int(timestamp))}: latitude: {lat}, longitude: {lon}")
             return {'timestamp':timestamp, 'latitude': lat,'longitude': lon}
         except URLError as e:
             raise e
@@ -199,12 +207,13 @@ def main():
         st.title('International Space Station Tracker')
         st.markdown(information['header1'])
         st.markdown(information['what'])
-        st.markdown(information['intro_source'])
+        st.markdown(information['intro_source'],unsafe_allow_html=True)
         st.markdown(information['header2'])
         st.table(pd.DataFrame.from_dict(information['tech_spec'],orient='index',columns=['Properties']))
-        st.markdown(information['intro_source'])
-        home_name_st = st.text_input('Home')
-        home_name = home_name_st if home_name_st else 'Modena'
+        st.markdown(information['intro_source'],unsafe_allow_html=True)
+        home_name_st = st.text_input('Show location relative to',value='Modena Italy')
+        home_name, home_lat, home_lon = get_home_location(home_name_st)
+        # home_name = home_name_st if home_name_st else 'Modena'
         a = TrackerISS()
         b = BasemapPlot(home_name,home_lat,home_lon)
         while True:
