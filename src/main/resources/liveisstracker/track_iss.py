@@ -199,7 +199,7 @@ class BasemapPlot:
         plt.title('ISS is currently above {} \n \
             Ground distance between {} and ISS is {}km.\n \
             Ground speed {} km/h' \
-            .format(country,self.home_name,round(distance_to_home,2),round(speed,2)))
+            .format(country,self.home_name,round(distance_to_home,2),round(speed,2) if speed > 1 else 'Calculating...'))
         self.the_plot.pyplot(plt,clear_figure=True)
 
 def main():
