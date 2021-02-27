@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 from mysql.connector import Error
+from mylogger.iss_logging import logger
 
 #mysql -P 3606 -h localhost -u root --password=root
 
@@ -17,6 +18,7 @@ class MySql:
     def __init__(self):
         try:
             self.connection = mysql.connector.connect(**self.config)
+            logger.info('DB connection successful')
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print('Incorrect user name or password')
