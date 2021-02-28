@@ -14,8 +14,8 @@ make clean package
 ```
 
 ## Run the project
-To render maps using mapbox you need a token . Follow instructions [here](https://docs.mapbox.com/help/getting-started/access-tokens/). You can use a few account and get a public token. Save the public token in your project directory as ```map_secret.txt```. 
-This command will run the docker-compose.yml and brings the containers (Python app and DB) in the background.
+To render maps using mapbox, you need an access token. Follow instructions [here](https://docs.mapbox.com/help/getting-started/access-tokens/). You can use create a free account and get a public access token. Save the public token in your project directory as ```map_secret.txt```. 
+This command will run the docker-compose.yml and brings up the application (docker containers) in the background.
 ```
 make clean launch
 ```
