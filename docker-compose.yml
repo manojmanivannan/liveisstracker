@@ -11,7 +11,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-
+      - MAPBOX_TOKEN=/run/secrets/mapbox_token
+    secrets:
+      - mapbox_token
     links:
       - db
     ports:
@@ -34,3 +36,6 @@ volumes:
   mysqldb:
     driver: local
 
+secrets:
+   mapbox_token:
+     file: map_secret.txt
