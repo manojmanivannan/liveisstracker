@@ -13,11 +13,11 @@ from mylogger.iss_logging import logger
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
 
-def get_home_location(home_name):
-    location = geolocator.geocode(home_name)
+def get_city_location(city_name):
+    location = geolocator.geocode(city_name)
 
     if not location:
-        logger.error(f'"{home_name}" is not a valid city name')
+        logger.error(f'"{city_name}" is not a valid city name')
         st.write('Not a valid location')
         raise Exception(': Streamlit not RUNNING')
     
@@ -33,6 +33,7 @@ class TrackerISS:
     lon_pre = 0
     timestamp_pre = 0
     iss_link = 'http://api.open-notify.org/iss-now.json'
+    pass_link = 'http://api.open-notify.org/iss-pass.json?lat=LAT&lon=LON'
 
     def __init__(self):
 
@@ -51,6 +52,7 @@ class TrackerISS:
     def insert_record_in_db(self, lat, lon, timestamp):
 
         if self.db_cnx is not None:
+            logger.info(f'Inserting into DB lat:{lat},lon:{lon},timestamp:{timestamp}')
             self.db_cnx.insert_record('location',key_values={'lat':lat,'lon':lon,'datetime_id':timestamp})
     
     @staticmethod
@@ -78,8 +80,16 @@ class TrackerISS:
             return {'timestamp':timestamp, 'latitude': lat,'longitude': lon}
         except URLError as e:
             raise e
+    
+    @staticmethod
+    def get_pass_info_from_lat_lon(lat,lon):
+        response = url.urlopen(TrackerISS.pass_link.replace('LAT', lat).replace('LON', lon))
+        json_res = json.loads(response.read())
+        message = json_res['response']
+        
+        return message
 
-    def get_speed_iss_pos(self,testing_mode=None):
+    def get_speed_iss_pos(self,ignore_db_insert=False,testing_mode=None):
 
         if testing_mode:
             self.timestamp = testing_mode['timestamp']
@@ -92,8 +102,9 @@ class TrackerISS:
             self.latitude = gps_location['latitude']
             self.longitude = gps_location['longitude']
 
-            # Write location stats to DB
-            self.insert_record_in_db(self.latitude, self.longitude, self.timestamp)
+            if not ignore_db_insert:
+                # Write location stats to DB
+                self.insert_record_in_db(self.latitude, self.longitude, self.timestamp)
 
         # global lat_pre,lon_pre, self.timestamp_pre
 
