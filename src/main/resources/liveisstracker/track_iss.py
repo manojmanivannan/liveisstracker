@@ -16,7 +16,7 @@ from issTrack.page_information import information
 from issTrack.issTracking import *
 from PlotMap.MapBasePlot import *
 import plotly.graph_objects as go
-mapbox_access_token = os.getenv('MAPBOX_TOKEN')
+mapbox_access_token = open(os.getenv('MAPBOX_TOKEN')).read()
 
 def main():
             
