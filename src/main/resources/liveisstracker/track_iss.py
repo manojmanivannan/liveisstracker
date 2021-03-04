@@ -51,9 +51,7 @@ def main():
         fig = go.Figure(go.Scattermapbox(lat=[str(latitude)],lon=[str(longitude)],mode='markers',marker=go.scattermapbox.Marker(size=14)))
         fig.update_layout(hovermode='closest',mapbox=dict(accesstoken=mapbox_access_token,bearing=0, center=go.layout.mapbox.Center(lat=location[1][0],lon=location[1][1]),pitch=0,zoom=0))
         if st.button('Refresh'):
-            location = iss.get_speed_iss_pos()
-            fig.update_layout(hovermode='closest',mapbox=dict(accesstoken=mapbox_access_token,bearing=0,
-                                center=go.layout.mapbox.Center(lat=location[1][0],lon=location[1][1]),pitch=0,zoom=0))
+            pass
         st.plotly_chart(fig)
 
         st.write("Predict next ISS pass through by city")
