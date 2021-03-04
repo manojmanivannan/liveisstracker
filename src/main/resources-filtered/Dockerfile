@@ -9,6 +9,8 @@ COPY dist/${python_package}-${python_version}.tar.gz /tmp/
 RUN pip3 install --no-cache-dir /tmp/${python_package}-${python_version}.tar.gz
 #RUN pip3 install --no-cache-dir https://github.com/matplotlib/basemap/archive/master.zip
 
+RUN apt-get install -y supervisor
+
 ###### Remove the packages
 RUN rm -rf /tmp/*.tar.gz
 
@@ -19,7 +21,8 @@ RUN rm -rf /tmp/*.tar.gz
 # target/generated-sources/liveisstracker/liveisstracker into
 # /home/manoj/liveisstracker
 RUN mkdir -p /home/manoj/${python_package}
-
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN chown manoj:manoj /var/log/supervisor/supervisord.log
 
 # create a non-root user manoj
 RUN useradd -d /home/manoj -m -s /bin/bash manoj && echo "manoj:manoj" | chpasswd && adduser manoj sudo
@@ -36,4 +39,5 @@ USER manoj
 
 WORKDIR /home/manoj/${python_package}
 EXPOSE 8501
-CMD ["streamlit","run","track_iss.py"]
+# CMD ["python","track_iss.py"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

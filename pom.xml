@@ -160,6 +160,7 @@
 				<includes>
 					<include>requirements.txt</include>
 					<include>entrypoint.sh</include>
+					<include>supervisord.conf</include>
 				</includes>
 				<targetPath>${project.build.directory}/generated-sources/${python_package}</targetPath>
 				<filtering>false</filtering>
