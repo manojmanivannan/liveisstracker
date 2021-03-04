@@ -22,12 +22,14 @@ RUN rm -rf /tmp/*.tar.gz
 # /home/manoj/liveisstracker
 RUN mkdir -p /home/manoj/${python_package}
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN chown manoj:manoj /var/log/supervisor/supervisord.log
+
 
 # create a non-root user manoj
 RUN useradd -d /home/manoj -m -s /bin/bash manoj && echo "manoj:manoj" | chpasswd && adduser manoj sudo
 RUN chown -R manoj:manoj /home/manoj
+RUN touch /var/log/supervisor/supervisord.log &&  chown -R manoj:manoj /var/log/supervisor
 USER manoj
+
 
 ###### Entrypoint srcipt
 
