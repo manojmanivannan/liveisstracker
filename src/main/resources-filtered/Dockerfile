@@ -1,11 +1,11 @@
 FROM manojmanivannan18/python-hellomaven:python
-MAINTAINER ManojManivannan
+LABEL maintainer="ManojManivannan"
 
 COPY entrypoint.sh /tmp/
 
 ###### Copy python package
 COPY dist/${python_package}-${python_version}.tar.gz /tmp/
-###### Install the python package
+###### Install the python packages
 RUN pip3 install --no-cache-dir /tmp/${python_package}-${python_version}.tar.gz
 #RUN pip3 install --no-cache-dir https://github.com/matplotlib/basemap/archive/master.zip
 
