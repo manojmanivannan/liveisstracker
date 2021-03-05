@@ -7,3 +7,4 @@
 config.toml
 /.idea
 /venv
+map_secret.txt

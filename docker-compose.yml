@@ -1,13 +1,19 @@
-version: "2.1"
+version: "3.1"
 services:
   app:
     image: gitlab_registry
     volumes:
       - ./target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker
 
-    depends_on:
-        db:
-            condition: service_healthy
+    depends_on: 
+        - db
+          # condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - MAPBOX_TOKEN=/run/secrets/mapbox_token
+    secrets:
+      - mapbox_token
     links:
       - db
     ports:
@@ -19,14 +25,17 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
     volumes:
       - ./target/generated-sources/db:/docker-entrypoint-initdb.d/:ro
     healthcheck:
-        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-        timeout: 10s
-        retries: 10
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_ROOT_PASSWORD
+
 
 volumes:
   mysqldb:
     driver: local
 
+secrets:
+   mapbox_token:
+     file: map_secret.txt
