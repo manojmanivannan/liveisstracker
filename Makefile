@@ -47,7 +47,7 @@ prepare_py_container:
 	@docker pull manojmanivannan18/python-hellomaven:python-live; EXIT_CODE=$$?; \
 	if [ "$$EXIT_CODE" -eq 0 ]; then \
 		printf "[$(OKGREEN)INFO$(ENDC)] Starting up python container\n"; \
-		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" --name python_app "$(REGISTRY_URL)":"python-live" bash \
+		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-live" bash \
 		|| printf "[$(FAIL)ERROR$(ENDC)] Unable to run/start the python container\n" || exit 1;\
 	else \
 		printf "[$(FAIL)FAIL$(ENDC)] Unable to pull docker image for Python app base\n"; \
@@ -61,7 +61,9 @@ run_python_tests:
 	@echo "     Running python tests for $(branch_snapshot_name)"
 	@echo "-----------------------------------------------------------------------------"
 	@printf "[$(OKGREEN)INFO$(ENDC)] Testing python code: Developer mode : Unittest\n"
-	@$(MAKE) generate
+	@if [ ! -d "$(TOPDIR)/target" ]; then \
+		$(MAKE) generate; \
+		fi
 ifneq ($(shell docker ps -q --filter="name=python_app"),)
 	@printf "[$(OKGREEN)INFO$(ENDC)] Python container already running\n"
 else
@@ -69,7 +71,10 @@ else
 	@make prepare_py_container
 endif
 	@printf "[$(OKGREEN)INFO$(ENDC)] Running test as user: $(TEST_USER)\n"
-	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest --junitxml=report.xml tests"
+	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest --junitxml=report.xml tests"; EXIT_CODE=$$?; \
+		if [ "$$EXIT_CODE" -ne 0 ]; then \
+		printf "[$(FAIL)ERROR$(ENDC)] Python test failed !\n"; \
+		fi
 ifneq ($(remove_container),true)
 	@printf "[$(OKGREEN)INFO$(ENDC)] Removing python containers on which test was run\n"
 	@docker stop python_app && docker rm python_app || printf "[$(OKGREEN)INFO$(ENDC)] No containers to remove\n"
@@ -80,16 +85,18 @@ run_streamlit:
 	@echo "       Running Streamlit on $(branch_snapshot_name)"
 	@echo "-------------------------------------------------------------------------"
 	@printf "[$(OKGREEN)INFO$(ENDC)] Testing python code: Developer mode : Streamlit\n"
-	@make generate
+	@if [ ! -d "$(TOPDIR)/target" ]; then \
+		$(MAKE) generate; \
+		fi
 ifneq ($(shell docker ps -q --filter="name=python_app"),)
 	@printf "[$(OKGREEN)INFO$(ENDC)] Python container already exists\n"
 	@docker stop python_app && docker start python_app
-	@docker exec -t python_app bash -c "streamlit run track_iss.py"
 else
 	@printf "[$(OKGREEN)INFO$(ENDC)] There is no python container on which the streamlit can run\n"
 	@make prepare_py_container
-	@docker exec -t python_app bash -c "streamlit run track_iss.py"
 endif
+	@docker exec -t python_app bash -c "streamlit run track_iss.py"
+
 
 stop:
 	@printf "[$(OKGREEN)INFO$(ENDC)] Removing any and all containers related to this project\n"
@@ -103,7 +110,7 @@ endif
 		docker-compose down; \
 		else \
 		printf "[$(OKGREEN)INFO$(ENDC)] Getting resource to stop\n"; \
-		mvn resources:resources; \
+		make generate; \
 		docker-compose down; \
 		make clean; \
 	fi
