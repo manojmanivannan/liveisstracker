@@ -64,6 +64,10 @@ class TestISSTracker(TestCase):
         testing_mode = {'location_1':(0,0), 'location_2':(10,10)}
         self.assertAlmostEqual(self.tracker.get_distance_btwn_locations(testing_mode=testing_mode),1565.1, places=1)
 
+    def test_get_pass_information_from_location_0_0(self):
+        testing_mode={'timestamp':1, 'latitude':0, 'longitude':0}
+        self.assertEqual(self.tracker.get_pass_info_from_lat_lon(testing_mode=testing_mode),'failure')
+
 def run():
     TextTestRunner().run(defaultTestLoader.loadTestsFromTestCase(TestISSTracker))
 

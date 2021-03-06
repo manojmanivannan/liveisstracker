@@ -1,6 +1,6 @@
 from time import sleep, ctime
 import urllib.request as url
-from urllib.error import URLError
+from urllib.error import URLError, HTTPError
 import json, time
 from geopy.distance import geodesic
 try:
@@ -14,16 +14,17 @@ geolocator = Nominatim(user_agent="my-application",timeout=3)
 
 
 def get_city_location(city_name):
-    location = geolocator.geocode(city_name)
-
-    if not location:
-        logger.error(f'"{city_name}" is not a valid city name')
-        st.write('Not a valid location')
-        raise Exception(': Streamlit not RUNNING')
-    
-    logger.info(location.address)
-    logger.info("Latitude: "+location.raw['lat'])
-    logger.info("Longitude: "+location.raw['lon'])
+    try:
+        location = geolocator.geocode(city_name)
+        if not location:
+            logger.error(f'"{city_name}" is not a valid city name')
+            return 'Invalid','0.0','0.0'
+        logger.info(location)
+        logger.debug(location.address+"Latitude: "+location.raw['lat'])
+        logger.debug(location.address+"Longitude: "+location.raw['lon'])
+    except Exception as e:
+        logger.error(f'Encountered {e} while trying to get city location')
+        return 'Invalid','0.0','0.0'
 
     return location.address, location.raw['lat'], location.raw['lon']
 
@@ -71,6 +72,7 @@ class TrackerISS:
             if testing_mode:
                 response = url.urlopen(testing_mode['iss_link'])
             else:
+                logger.info('Getting ISS stat')
                 response = url.urlopen(TrackerISS.iss_link)
             json_res = json.loads(response.read())
             geo_location = json_res['iss_position']
@@ -82,12 +84,22 @@ class TrackerISS:
             raise e
     
     @staticmethod
-    def get_pass_info_from_lat_lon(lat,lon):
-        response = url.urlopen(TrackerISS.pass_link.replace('LAT', lat).replace('LON', lon))
+    def get_pass_info_from_lat_lon(lat=None,lon=None,testing_mode=None):
+        if testing_mode:
+            pass_url = TrackerISS.pass_link.replace('LAT', str(testing_mode['latitude'])).replace('LON', str(testing_mode['longitude']))
+        else:
+            pass_url = TrackerISS.pass_link.replace('LAT', str(lat)).replace('LON', str(lon))
+        try:
+            logger.info(f'Getting ISS pass through info for lat:{lat},lon:{lon}')
+            response = url.urlopen(pass_url)
+        except url.HTTPError as e:
+            logger.error(f'HTTP error while opening URL "{pass_url}"; Bad request: Error code:{e.code}')
+            return 'failure'
         json_res = json.loads(response.read())
-        message = json_res['response']
-        
-        return message
+        if json_res['message'] == 'success':
+            return json_res['response']
+        else:
+            return json_res['message']
 
     def get_speed_iss_pos(self,ignore_db_insert=False,testing_mode=None):
 

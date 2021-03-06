@@ -1,49 +1,47 @@
-mapbox_access_token = 'pk.eyJ1IjoibWFub2ptYW5pdmFubmFuIiwiYSI6ImNrYW02YXVsZDBxcmUydXM5a3c1cWNxZDEifQ.lKTAI6NhJ-TfLxm6AziupQ'
 
 import plotly.graph_objects as go
 from mylogger.iss_logging import logger
 import streamlit as st
 from issTrack.issTracking import *
 from time import sleep
-
+import os
+import pytz
+from dateutil import tz
+from datetime import datetime
 
 # co_ordinate=iss.get_speed_iss_pos()
 # latitude=co_ordinate[1][0]
 # longitude=co_ordinate[1][1]
 
-def PlotlyMap():
-    mapbox_access_token = 'pk.eyJ1IjoibWFub2ptYW5pdmFubmFuIiwiYSI6ImNrYW02YXVsZDBxcmUydXM5a3c1cWNxZDEifQ.lKTAI6NhJ-TfLxm6AziupQ'
-    iss = TrackerISS()
-    location = iss.get_speed_iss_pos()
+def get_plotly_figure(location,token):
     latitude = location[1][0]
     longitude = location[1][1]
     fig = go.Figure(go.Scattermapbox(lat=[str(latitude)],lon=[str(longitude)],mode='markers',marker=go.scattermapbox.Marker(size=14)))
-    fig.update_layout(hovermode='closest',mapbox=dict(accesstoken=mapbox_access_token,bearing=0,
-                    center=go.layout.mapbox.Center(lat=latitude,lon=longitude),pitch=0,zoom=2))
-    
-    with st.empty():
-        while True:
-            sleep(5)
-            location = iss.get_speed_iss_pos()
-            latitude = location[1][0]
-            longitude = location[1][1]
-            # fig.update_geos({'lat':[latitude+1],'lon':[longitude+1]})
-            fig.update({'data':[{'lat':[latitude],'lon':[longitude]}]},overwrite=False)
-            fig.update_layout({'mapbox':{'center':go.layout.mapbox.Center(lat=latitude,lon=longitude)}},overwrite=False)
+    fig.update_layout(hovermode='closest',mapbox=dict(accesstoken=token,bearing=0, center=go.layout.mapbox.Center(lat=location[1][0],lon=location[1][1]),pitch=0,zoom=0))
+    return fig
 
-            # fig.update_layout(height=300, margin={"r":0,"t":0,"l":0,"b":0})
-            # fig.update_geos(projection_rotation=dict(lon=latitude, lat=latitude,roll=0),overwrite=False)
-            # fig.update_geos(center=dict(lon=latitude, lat=latitude),overwrite=False)
-            st.plotly_chart(fig, use_container_width=True)
+def get_mapbox_token(env_var_name):
 
-def update_plotly(map_figure):
-    iss = TrackerISS()
-    location = iss.get_speed_iss_pos()
-    latitude = location[1][0]
-    longitude = location[1][1]
-    map_figure.update({'data':[{'lat':[latitude],'lon':[longitude]}]},overwrite=False)
-    map_figure.update_layout({'mapbox':{'center':go.layout.mapbox.Center(lat=latitude,lon=longitude)}},overwrite=False)
-    return map_figure
+    try:
+        mapbox_access_token = open(os.getenv(env_var_name)).read()
+        logger.debug(f'MAPBOX Access Token: {mapbox_access_token}')
+        return False, mapbox_access_token
+    except TypeError:
+        logger.error('Not a valid token. MAPBOX chart will be disabled')
+        return True, None
 
+def display_pass_statistics(pass_information):
+        logger.debug(f'Pass information: {pass_information}')
+        if not pass_information == 'failure':
+            pass_number = st.selectbox('Select the pass number?',tuple([s+1 for s in range(len(pass_information))]))
+            visible_duration = pass_information[pass_number-1]['duration']
+            pred_time = pass_information[pass_number-1]['risetime'] # .strftime('%Y-%m-%d %H:%M:%S') GMT
 
+            timezone = st.selectbox('Select timezone?',tuple([s for s in pytz.all_timezones]))
+            pred_time_utc = datetime.utcfromtimestamp(pred_time)
+
+            converted_time = pred_time_utc.astimezone(tz.gettz(timezone)).strftime("%Y-%m-%d %H:%M:%S")
+            st.markdown(f"<h3 style='text-align: center;'>Visible for {visible_duration} seconds from {converted_time}</h3>",unsafe_allow_html=True)
+        else:
+            st.write('Not a valid city')
 
