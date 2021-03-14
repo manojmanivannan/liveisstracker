@@ -7,4 +7,5 @@
 config.toml
 /.idea
 /venv
+/.vscode
 map_secret.txt

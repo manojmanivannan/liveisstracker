@@ -158,9 +158,9 @@ launch:
 		printf "[$(WARNING)WARN$(ENDC)] No registry image for current branch. Build image first !\n"; \
 		printf "[$(OKGREEN)INFO$(ENDC)] Using local image if present.\n"; \
 		fi;
-	@$$(sed -i 's#image: gitlab_registry.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
-	@docker-compose up -d
-	@$$(sed -i 's#image: registry.*#image: gitlab_registry#g' docker-compose.yml)
+	@$$(sed -i 's#image: registry.gitlab.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
+	@docker-compose --compatibility up -d 
+	@$$(sed -i 's#image: registry.*#image: registry.gitlab#g' docker-compose.yml)
 
 
 help:

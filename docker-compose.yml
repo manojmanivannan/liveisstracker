@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   app:
-    image: gitlab_registry
+    image: registry.gitlab
     volumes:
       - ./target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker
 
@@ -16,6 +16,12 @@ services:
       - mapbox_token
     links:
       - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    restart: on-failure:5
     ports:
       - "8501:8501"
 
