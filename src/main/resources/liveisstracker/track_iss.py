@@ -16,6 +16,11 @@ from issTrack.issTracking import *
 from PlotMap.MapBasePlot import *
 from PlotMap.PlotlyFig import get_plotly_figure, get_mapbox_token, display_pass_statistics
 
+st.set_page_config(
+    page_title="Live ISS Tracker", 
+    page_icon='https://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/512/international-space-station-icon.png', 
+    layout='centered', 
+    initial_sidebar_state='auto')
 
 
 def main():
@@ -39,7 +44,8 @@ def main():
                 earth = BasemapPlot(home_name,home_lat,home_lon)
         while live_show == 'Yes' and home_name_st:
             earth.plot_location(iss.get_speed_iss_pos())
-            time.sleep(5)
+            with st.spinner('Reloading in 5 seconds..'):
+                time.sleep(5)
 
         mapbox_disable,mapbox_access_token = get_mapbox_token(env_var_name='MAPBOX_TOKEN')
         if not mapbox_disable:        
@@ -53,6 +59,7 @@ def main():
 
         st.write("Predict next ISS pass through by city")
         predict_city = st.text_input('Enter city name',value='London')
+        
         if predict_city:
             _, predict_city_lat, predict_city_lon = get_city_location(predict_city)
 
