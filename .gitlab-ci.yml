@@ -29,13 +29,14 @@ stages:
     paths:
       - target/generated-sources/liveisstracker/dist/
       - .m2/current_branch_snapshot
+      - pipelinelog.txt
     expire_in: 1 week
 
 buildTagged:
   extends: .BuildPackage
   script:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true --get_version > .m2/current_branch_snapshot
-      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true | tee -a pipelinelog.txt
   only:
       - tags
 
@@ -44,7 +45,7 @@ buildFeatureOrBugfix:
   extends: .BuildPackage
   script:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --get_version > .m2/current_branch_snapshot
-      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME}
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} | tee -a pipelinelog.txt
   except:
       - tags
       - develop
@@ -53,7 +54,7 @@ buildDevelop:
   extends: .BuildPackage
   script:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH} --get_version > .m2/current_branch_snapshot
-      - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH}
+      - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH} | tee -a pipelinelog.txt
   only:
       - develop
 
