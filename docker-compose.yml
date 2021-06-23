@@ -31,7 +31,6 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
     volumes:
       - ./target/generated-sources/db:/docker-entrypoint-initdb.d/:ro
     healthcheck:
