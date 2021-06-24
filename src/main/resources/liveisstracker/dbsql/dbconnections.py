@@ -11,7 +11,7 @@ class MySql:
     config = {
         'user': 'root',
         'password': 'root',
-        'host': 'db',
+        'host': 'liveisstracker_db_1',
         'port': '3306',
         'database': 'dev'
         }
