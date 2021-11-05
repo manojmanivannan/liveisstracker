@@ -69,3 +69,10 @@ Java and Maven can be setup by installing maven alone, which will pull its java 
 
 ```sudo apt-get install maven``` for debian/ubuntu
 
+## Release 
+
+A command line utility can be installed from https://pypi.org/project/liveisstracker/ .
+
+#### Note
+
+The version of utlity is determined from the pom.xml ```<version>x.x.x</version>```. Make sure to bump the version (increment from the last GIT tag) in feature/bugfix branch. Accordingly a new tag should be released, to the same bumped version, after the branch is merged.

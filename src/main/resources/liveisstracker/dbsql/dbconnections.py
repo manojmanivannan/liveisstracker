@@ -1,7 +1,10 @@
 import mysql.connector
 from mysql.connector import errorcode
 from mysql.connector import Error
-from mylogger.iss_logging import logger
+try:
+    from mylogger.iss_logging import logger
+except ModuleNotFoundError:
+    from ..mylogger.iss_logging import logger
 
 #mysql -P 3606 -h localhost -u root --password=root
 
@@ -15,17 +18,18 @@ class MySql:
         'port': '3306',
         'database': 'dev'
         }
-    def __init__(self):
+    def __init__(self,silent=False):
+        self.silent = silent
         try:
             self.connection = mysql.connector.connect(**self.config)
-            logger.info('DB connection successful')
+            logger.info('DB connection successful') if not self.silent else None
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                logger.error('Incorrect user name or password')
+                logger.error('Incorrect user name or password') 
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 logger.error('Database does not exist')
             elif err.errno == 2003:
-                logger.error('Cant connect to Database')
+                logger.error('Cant connect to Database') if not self.silent else None
             else:
                 raise('Unknown Error connecting to Database')
     
