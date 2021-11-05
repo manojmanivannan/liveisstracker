@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.manojm18</groupId>
 	<artifactId>liveisstracker</artifactId>
-	<version>0.0.2</version>
+	<version>1.0.1</version>
 
 	<repositories>
 		<repository>
@@ -121,7 +121,8 @@
 							<workingDirectory>${project.build.directory}/generated-sources/${python_package}</workingDirectory>
 							<arguments>
 								<argument>setup.py</argument>
-								<argument>sdist</argument>
+                                <argument>sdist</argument>
+                                <argument>bdist_wheel</argument>
 							</arguments>
 						</configuration>
 					</execution>

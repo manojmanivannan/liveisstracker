@@ -44,7 +44,7 @@ REGISTRY_URL := manojmanivannan18/python-hellomaven
 
 prepare_py_container:
 	@printf "[$(OKGREEN)INFO$(ENDC)] Pulling Python app base docker image\n"
-	@docker pull manojmanivannan18/python-hellomaven:python-live; EXIT_CODE=$$?; \
+	@docker pull "${REGISTRY_URL}":python-live; EXIT_CODE=$$?; \
 	if [ "$$EXIT_CODE" -eq 0 ]; then \
 		printf "[$(OKGREEN)INFO$(ENDC)] Starting up python container\n"; \
 		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-live" bash \

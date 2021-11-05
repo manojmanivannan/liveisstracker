@@ -22,6 +22,8 @@ cache:
 stages:
   - test
   - build
+  - release
+
 
 .BuildPackage:
   stage: build
@@ -56,6 +58,20 @@ buildDevelop:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH}
   only:
       - develop
+
+release-pip:
+  stage: release
+  artifacts:
+    paths:
+      - target/generated-sources/liveisstracker/dist/
+      - .m2/current_branch_snapshot
+  script:
+      - pip3 install -U twine
+      - cd target/generated-sources/liveisstracker && rm dist/*
+      - python3 setup.py sdist bdist_wheel
+      - twine upload dist/*
+  only:
+      - tags
 
 test:
     image: manojmanivannan18/python-hellomaven:pytest
