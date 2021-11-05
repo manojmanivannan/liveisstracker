@@ -121,7 +121,8 @@
 							<workingDirectory>${project.build.directory}/generated-sources/${python_package}</workingDirectory>
 							<arguments>
 								<argument>setup.py</argument>
-								<argument>sdist</argument>
+                                <argument>sdist</argument>
+                                <argument>bdist_wheel</argument>
 							</arguments>
 						</configuration>
 					</execution>

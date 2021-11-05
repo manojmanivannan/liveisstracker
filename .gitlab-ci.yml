@@ -45,6 +45,9 @@ buildFeatureOrBugfix:
   script:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --get_version > .m2/current_branch_snapshot
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME}
+      - pip install -y -U twine
+      - cd target/generated-sources/liveisstracker
+      - twine upload dist/*
   except:
       - tags
       - develop
