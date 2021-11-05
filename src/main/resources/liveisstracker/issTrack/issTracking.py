@@ -8,7 +8,10 @@ try:
 except ModuleNotFoundError:
     from liveisstracker.dbsql.dbconnections import *
 from geopy.geocoders import Nominatim
-from mylogger.iss_logging import logger
+try:
+    from mylogger.iss_logging import logger
+except ModuleNotFoundError:
+    from liveisstracker.mylogger.iss_logging import logger
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
@@ -36,18 +39,19 @@ class TrackerISS:
     iss_link = 'http://api.open-notify.org/iss-now.json'
     pass_link = 'http://api.open-notify.org/iss-pass.json?lat=LAT&lon=LON'
 
-    def __init__(self):
+    def __init__(self,silent=False):
 
-        gps_location = self.get_iss_lat_lon()
-        self.timestamp = gps_location['timestamp']
-        self.latitude = gps_location['latitude']
-        self.longitude = gps_location['longitude']
+        self.silent = silent
+        self.gps_location = self.get_iss_lat_lon(silent=self.silent)
+        self.timestamp = self.gps_location['timestamp']
+        self.latitude = self.gps_location['latitude']
+        self.longitude = self.gps_location['longitude']
 
         try:
-            logger.info('Establishing connection to DB')
-            self.db_cnx = MySql()
+            logger.info('Establishing connection to DB') if not self.silent else None
+            self.db_cnx = MySql(self.silent)
         except Exception:
-            logger.error('DB connection failed')
+            logger.error('DB connection failed') if not self.silent else None
             self.db_cnx = None
 
     def insert_record_in_db(self, lat, lon, timestamp):
@@ -66,13 +70,13 @@ class TrackerISS:
         return geodesic(location_1,location_2).km
 
     @staticmethod
-    def get_iss_lat_lon(testing_mode=None):
+    def get_iss_lat_lon(testing_mode=None,silent=False):
 
         try:
             if testing_mode:
                 response = url.urlopen(testing_mode['iss_link'])
             else:
-                logger.info('Getting ISS stat')
+                logger.info('Getting ISS stat') if not silent else None
                 response = url.urlopen(TrackerISS.iss_link)
             json_res = json.loads(response.read())
             geo_location = json_res['iss_position']
