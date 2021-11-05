@@ -69,6 +69,8 @@ release-pip:
       - pip3 install -U twine
       - cd target/generated-sources/liveisstracker
       - twine upload dist/*
+  only:
+      - tags
 
 test:
     image: manojmanivannan18/python-hellomaven:pytest
