@@ -3,7 +3,12 @@
 
 # Live ISS Tracker
 
-A project started as a way to learn how to real world projects are developed and deployed into production.
+Liveisstracker is a containerized application which tracks and shows the current location of Internation Space Station on an orthographic world plot.
+Visit [this](https://share.streamlit.io/manojmanivannan/liveisstracker-streamlit/track_iss.py) interactive page to view the application running on cloud, thanks to Streamlit cloud.
+
+#### Background
+
+A project started as a way to learn how real world projects are developed and deployed into production.
 It also serves as a template for creating a python project, build using docker containers, docker-compose and the use of maven. It also includes gitlab continuous integration.
 
 # Make commands
@@ -69,9 +74,27 @@ Java and Maven can be setup by installing maven alone, which will pull its java 
 
 ```sudo apt-get install maven``` for debian/ubuntu
 
-## Release 
+## CLI Release 
 
-A command line utility can be installed from https://pypi.org/project/liveisstracker/ .
+This project also generates a command line utility that can be installed from https://pypi.org/project/liveisstracker/ .
+
+```pip install liveisstracker```
+
+```
+$ liveisstracker --help
+Usage: liveisstracker [OPTIONS]
+Options:
+  -i, --get-iss-location  Get the current location of International Space Station
+  -s, --get-iss-speed     Get the current ground speed of International Space Station
+  -c, --get-country       Get the country above which the ISS is current passing over
+  --help                  Show this message and exit.```
+```
+
+```
+$ liveisstracker -i -s
+Timestamp (UTC): 2021-11-07 21:14:47 ISS is at Lat:-25.0611 Lon:-172.0715
+Ground Speed of International Space Station is ~ 27930.88 Km/h
+```
 
 #### Note
 
