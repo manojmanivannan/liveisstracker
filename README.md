@@ -98,4 +98,4 @@ Ground Speed of International Space Station is ~ 27930.88 Km/h
 
 #### Note
 
-The version of utlity is determined from the pom.xml ```<version>x.x.x</version>```. Make sure to bump the version (increment from the last GIT tag) in feature/bugfix branch. Accordingly a new tag should be released, to the same bumped version, after the branch is merged.
+The version of utility is determined from the pom.xml ```<version>x.x.x</version>```. Make sure to bump the version (increment from the last GIT tag) in feature/bugfix branch. Accordingly a new tag should be released, to the same bumped version, after the branch is merged.
