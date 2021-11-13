@@ -61,8 +61,11 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
                                         'lon':[float(location["longitude"])]}
                                         ),
                                         lat='lat',
-                                        lon='lon')
+                                        lon='lon', 
+                                        width=1300, 
+                                        height=800)
         fig.write_image(plot_iss)
+        print(f'INFO: Map saved as {plot_iss}')
 
 
 
