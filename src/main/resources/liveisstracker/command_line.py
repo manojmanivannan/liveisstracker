@@ -4,19 +4,28 @@ import click
 from datetime import datetime
 from geopy.distance import geodesic
 from geopy.geocoders import Nominatim
+import plotly.express as px
+import pandas as pd
 from time import sleep
 
+def get_iss_location():
+    return TrackerISS(silent=True).gps_location
 
-@click.command()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--get-iss-location','-i', is_flag=True, help="Get the current location of International Space Station")
 @click.option('--get-iss-speed','-s',is_flag=True, help="Get the current ground speed of International Space Station")
 @click.option('--get-country','-c',is_flag=True, help="Get the country above which the ISS is current passing over")
-def main(get_iss_location,get_iss_speed,get_country):
+@click.option('--plot-iss','-p',type=click.Path(exists=False), metavar='FILENAME.png',default='iss_location.png', help="Plot the current position of International Space Station on a map")
+def main(get_iss_location,get_iss_speed,get_country,plot_iss):
+    """
+    liveisstracker can get location,speed and pass-over country based on current location of International Space Station
+    """
 
     location = TrackerISS(silent=True).gps_location
 
     if get_iss_location:
-        location = TrackerISS(silent=True).gps_location
         print(f'Timestamp (UTC): {datetime.utcfromtimestamp(int(location["timestamp"])).strftime("%Y-%m-%d %H:%M:%S")} ISS is at Lat:{location["latitude"]} Lon:{location["longitude"]}')
 
     if get_iss_speed:
@@ -46,4 +55,17 @@ def main(get_iss_location,get_iss_speed,get_country):
             country = 'the ocean'
 
         print(f'Internaionl Space Station is currently above {country}')
+
+    if plot_iss:
+        fig = px.scatter_geo(pd.DataFrame({'lat':[float(location["latitude"])],
+                                        'lon':[float(location["longitude"])]}
+                                        ),
+                                        lat='lat',
+                                        lon='lon', 
+                                        width=1300, 
+                                        height=800)
+        fig.write_image(plot_iss)
+        print(f'INFO: Map saved as {plot_iss}')
+
+
 
