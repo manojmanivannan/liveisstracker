@@ -17,7 +17,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option('--get-iss-location','-i', is_flag=True, help="Get the current location of International Space Station")
 @click.option('--get-iss-speed','-s',is_flag=True, help="Get the current ground speed of International Space Station")
 @click.option('--get-country','-c',is_flag=True, help="Get the country above which the ISS is current passing over")
-@click.option('--plot-iss','-p',type=click.Path(exists=False), metavar='FILENAME.png',default='iss_location.png', help="Plot the current position of International Space Station on a map")
+@click.option('--plot-iss','-p',type=click.Path(exists=False), metavar='FILENAME.png', help="Plot the current position of International Space Station on a map")
 def main(get_iss_location,get_iss_speed,get_country,plot_iss):
     """
     liveisstracker can get location,speed and pass-over country based on current location of International Space Station
