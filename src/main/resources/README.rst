@@ -23,7 +23,7 @@ A command line utility to get stats from International Space Station.
 
     Options:
     -i, --get-iss-location       Get the current location of International Space
-                                   Station
+                                   Station + Google MAP URL
 
     -s, --get-iss-speed          Get the current ground speed of International
                                    Space Station
@@ -42,8 +42,9 @@ Get stats from International Space Station
 .. code:: bash
 
    $ liveisstracker -i -s
-   Timestamp (UTC): 2021-11-07 21:14:47 ISS is at Lat:-25.0611 Lon:-172.0715
-   Ground Speed of International Space Station is ~ 27930.88 Km/h
+   Timestamp (UTC): 2021-11-17 15:52:05 ISS is at Lat:24.6399 Lon:30.1919
+   https://maps.google.com/?q=24.6399,30.1919&ll=24.6399,30.1919&z=3
+   Ground Speed of International Space Station is ~ 24833.19 Km/h
 
 
 Installation
