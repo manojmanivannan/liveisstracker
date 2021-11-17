@@ -29,7 +29,6 @@ stages:
   stage: build
   artifacts:
     paths:
-      - target/generated-sources/liveisstracker/dist/
       - .m2/current_branch_snapshot
     expire_in: 1 week
 
