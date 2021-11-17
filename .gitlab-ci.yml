@@ -62,11 +62,11 @@ release-pip:
   stage: release
   artifacts:
     paths:
-      - target/generated-sources/liveisstracker/dist/
       - .m2/current_branch_snapshot
   script:
       - pip3 install -U twine
-      - cd target/generated-sources/liveisstracker
+      - make generate
+      - cd target/generated-sources/liveisstracker && ls -l
       - python3 setup.py sdist bdist_wheel && find dist/ -type f -not -name "*${CI_COMMIT_TAG}*" -exec rm -v {} \;
       - twine upload dist/*
   only:
