@@ -10,7 +10,7 @@ requirements = ['geopy==1.20.0','geographiclib==1.50','mysql-connector==2.2.9','
 
 here = path.abspath(path.dirname(__file__))
 
-with io.open(path.join(here, 'readme.rst'), encoding='utf-8') as f:
+with io.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
