@@ -59,7 +59,7 @@ buildDevelop:
   only:
       - develop
 
-release-pip:
+release-pip-tag:
   stage: release
   artifacts:
     paths:
@@ -72,6 +72,24 @@ release-pip:
       - twine upload dist/*
   only:
       - tags
+$(.m2/gitlab_build.sh --get_version)-$(date +%Y-%m-%d-%H-%M)
+
+
+release-pip-featureORbugfix:
+  stage: release
+  artifacts:
+    paths:
+      - target/generated-sources/liveisstracker/dist/
+      - .m2/current_branch_snapshot
+  script:
+      - pip3 install -U twine
+      - cd target/generated-sources/liveisstracker
+      - sed "s#version=.*#version=\"$(../../../.m2/gitlab_build.sh --get_version)-$(date +%Y-%m-%d-%H-%M)\"#g" setup.py 
+      - python3 setup.py sdist bdist_wheel && find dist/ -type f -not -name "*$(../../../.m2/gitlab_build.sh --get_version)-$(date +%Y-%m-%d-%H-%M)*" -exec rm -v {} \;
+      - twine upload dist/*
+  except:
+      - tags
+      - develop
 
 test:
     image: manojmanivannan18/python-hellomaven:pytest
