@@ -14,7 +14,7 @@ def get_iss_location():
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.option('--get-iss-location','-i', is_flag=True, help="Get the current location of International Space Station")
+@click.option('--get-iss-location','-i', is_flag=True, help="Get the current location of International Space Station + Google MAP URL")
 @click.option('--get-iss-speed','-s',is_flag=True, help="Get the current ground speed of International Space Station")
 @click.option('--get-country','-c',is_flag=True, help="Get the country above which the ISS is current passing over")
 @click.option('--plot-iss','-p',type=click.Path(exists=False), metavar='FILENAME.png', help="Plot the current position of International Space Station on a map")
@@ -27,6 +27,7 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
 
     if get_iss_location:
         print(f'Timestamp (UTC): {datetime.utcfromtimestamp(int(location["timestamp"])).strftime("%Y-%m-%d %H:%M:%S")} ISS is at Lat:{location["latitude"]} Lon:{location["longitude"]}')
+        print(f'https://maps.google.com/?q={location["latitude"]},{location["longitude"]}&ll={location["latitude"]},{location["longitude"]}&z=4')
 
     if get_iss_speed:
         location_0 = location
