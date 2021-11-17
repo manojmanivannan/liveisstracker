@@ -2,6 +2,7 @@ image: manojmanivannan18/python-hellomaven:build
 
 before_script:
   - source ~/.bashrc
+  - pip3 install -U twine
 
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
@@ -36,6 +37,7 @@ buildTagged:
   script:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true --get_version > .m2/current_branch_snapshot
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true
+      - twine upload target/generated-sources/liveisstracker/dist/*
   only:
       - tags
 
@@ -56,19 +58,6 @@ buildDevelop:
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH}
   only:
       - develop
-
-release-pip:
-  stage: release
-  artifacts:
-    paths:
-      - .m2/current_branch_snapshot
-  script:
-      - pip3 install -U twine
-      - sed -i "s/version=.*/version=\"${CI_COMMIT_TAG}\",/g" src/main/resources/setup.py
-      - mvn -s .m2/settings.xml generate-test-resources 
-      - twine upload target/generated-sources/liveisstracker/dist/*
-  only:
-      - tags
 
 test:
     image: manojmanivannan18/python-hellomaven:pytest
