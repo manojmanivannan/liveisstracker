@@ -35,7 +35,7 @@ stages:
 buildTagged:
   extends: .BuildPackage
   script:
-      - sed -i "s/version=.*/version=\"${CI_COMMIT_TAG}\",/g" src/main/resources/setup.py
+      - sed -i "s/<version>.*/<version>${CI_COMMIT_TAG}<\/version>/g" pom.xml
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true --get_version > .m2/current_branch_snapshot
       - /bin/bash .m2/gitlab_build.sh --branch ${CI_COMMIT_REF_NAME} --taggedBuild true
       - twine upload target/generated-sources/liveisstracker/dist/*
