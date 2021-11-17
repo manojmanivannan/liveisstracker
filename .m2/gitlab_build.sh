@@ -135,8 +135,8 @@ else
         VER_FULL="${GIT_SANITIZED_BRANCH}-SNAPSHOT"
     else
         # SNAPSHOT builds use NEXT patch number by default - feature/bugfix
-        let VER_PATCH=${VER_PATCH}+1
         FEATURE_NEXT_TAG="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}"
+        let VER_PATCH=${VER_PATCH}+1
         VER_FULL="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}-${GIT_SANITIZED_BRANCH}-SNAPSHOT"
     fi
 fi
