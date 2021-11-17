@@ -64,8 +64,8 @@ release-pip:
       - .m2/current_branch_snapshot
   script:
       - pip3 install -U twine
+      - sed -i "s/version=.*/version=\"${CI_COMMIT_TAG}\",/g" src/main/resources/setup.py
       - mvn -s .m2/settings.xml generate-test-resources 
-      - sed -i "s/version=.*/version=\"${CI_COMMIT_TAG}\",/g" target/generated-sources/liveisstracker/setup.py
       - twine upload target/generated-sources/liveisstracker/dist/*
   only:
       - tags
