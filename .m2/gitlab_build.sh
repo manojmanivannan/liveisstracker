@@ -4,7 +4,7 @@ MVN_SETTINGS="-s .m2/settings.xml -Pgitlab-resource"
 IS_TAG_BUILD=false
 RET_CODE=0
 GET_VERSION_ONLY=0
-GET_NEXT_TAG=0
+GET_FEATURE_NEXT_TAG=0
 
 function do_header
 {
