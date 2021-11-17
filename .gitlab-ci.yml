@@ -64,10 +64,8 @@ release-pip:
       - .m2/current_branch_snapshot
   script:
       - pip3 install -U twine
-      - make generate
-      - cd target/generated-sources/liveisstracker
-      - python3 setup.py sdist bdist_wheel && ls -l dist/ && find dist/ -type f -not -name "*${CI_COMMIT_TAG}*" -exec rm -v {} \;
-      - twine upload dist/*
+      - mvn -s .m2/settings.xml generate-test-resources 
+      - twine upload target/generated-sources/liveisstracker/dist/*
   only:
       - tags
 
