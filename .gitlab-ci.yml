@@ -15,7 +15,6 @@ services:
 
 cache:
  paths:
-   - target/
    - .m2/
 
 
