@@ -83,9 +83,9 @@ while [ "$#" -gt 0 ]; do
       shift
       GET_VERSION_ONLY=1
       ;;
-  --get_next_tag)
+  --get_feature_next_tag)
       shift
-      GET_NEXT_TAG=1
+      GET_FEATURE_NEXT_TAG=1
       ;;
     *)
       echo "Unknown parameter: $1"
@@ -136,7 +136,7 @@ else
     else
         # SNAPSHOT builds use NEXT patch number by default - feature/bugfix
         let VER_PATCH=${VER_PATCH}+1
-        NEXT_TAG="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}"
+        FEATURE_NEXT_TAG="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}"
         VER_FULL="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}-${GIT_SANITIZED_BRANCH}-SNAPSHOT"
     fi
 fi
@@ -154,9 +154,9 @@ then
     exit 0
 fi
 
-if [ "${GET_NEXT_TAG}" -eq 1 ]
+if [ "${GET_FEATURE_NEXT_TAG}" -eq 1 ]
 then
-    echo "${NEXT_TAG}";
+    echo "${FEATURE_NEXT_TAG}.$(date +%s)";
     exit 0
 fi
 
