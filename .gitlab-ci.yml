@@ -82,7 +82,7 @@ release-pip-featureORbugfix:
       - .m2/current_branch_snapshot
   script:
       - pip3 install -U twine
-      - cd target/generated-sources/liveisstracker && echo $(../../../.m2/gitlab_build.sh --get_next_tag).$(date +%s) > version.txt
+      - cd target/generated-sources/liveisstracker && echo $(/bin/bash ../../../.m2/gitlab_build.sh --get_next_tag).$(date +%s) > version.txt
       - sed -i "s#version=.*#version=\"$(cat version.txt)\",#g" setup.py 
       - python3 setup.py sdist bdist_wheel && find dist/ -type f -not -name "*$(cat version.txt)*" -exec rm -v {} \;
       - twine upload dist/*
