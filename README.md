@@ -81,21 +81,26 @@ This project also generates a command line utility that can be installed from ht
 ```pip install liveisstracker```
 
 ```
-$ liveisstracker --help
-Usage: liveisstracker [OPTIONS]
-Options:
-  -i, --get-iss-location  Get the current location of International Space Station
-  -s, --get-iss-speed     Get the current ground speed of International Space Station
-  -c, --get-country       Get the country above which the ISS is current passing over
-  --help                  Show this message and exit.```
+  Usage: liveisstracker [OPTIONS]
+
+  liveisstracker can get location,speed and pass-over country based on
+  current location of International Space Station
+
+  Options:
+  -i, --get-iss-location       Get the current location of International Space
+                                  Station + Google MAP URL
+  -s, --get-iss-speed          Get the current ground speed of International
+                                  Space Station
+  -c, --get-country            Get the country above which the ISS is current
+                                  passing over
+  -p, --plot-iss FILENAME.png  Plot the current position of International
+                                  Space Station on a map
+  -h, --help                   Show this message and exit.
 ```
 
 ```
 $ liveisstracker -i -s
-Timestamp (UTC): 2021-11-07 21:14:47 ISS is at Lat:-25.0611 Lon:-172.0715
-Ground Speed of International Space Station is ~ 27930.88 Km/h
+Timestamp (UTC): 2021-11-17 15:52:05 ISS is at Lat:24.6399 Lon:30.1919
+https://maps.google.com/?q=24.6399,30.1919&ll=24.6399,30.1919&z=3
+Ground Speed of International Space Station is ~ 24833.19 Km/h
 ```
-
-#### Note
-
-The version of utility is determined from the pom.xml ```<version>x.x.x</version>```. Make sure to bump the version (increment from the last GIT tag) in feature/bugfix branch. Accordingly a new tag should be released, to the same bumped version, after the branch is merged.
