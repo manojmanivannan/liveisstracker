@@ -22,9 +22,9 @@ RUN mkdir -p /home/manoj/${python_package}
 
 
 # create a non-root user manoj
-RUN useradd -d /home/manoj -m -s /bin/bash manoj && echo "manoj:manoj" | chpasswd && adduser manoj sudo
-RUN chown -R manoj:manoj /home/manoj
-USER manoj
+# RUN useradd -d /home/manoj -m -s /bin/bash manoj && echo "manoj:manoj" | chpasswd && adduser manoj sudo
+# RUN chown -R manoj:manoj /home/manoj
+# USER manoj
 
 ###### Entrypoint srcipt
 
