@@ -33,7 +33,7 @@ endif
 
 test_user_name=
 ifdef TEST_USER
-override test_user_name=-uroot
+override test_user_name=-u$(TEST_USER)
 endif
 
 REPO_URL := registry.gitlab.com/manojm18
@@ -74,6 +74,10 @@ endif
 	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest --junitxml=report.xml tests"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
 		printf "[$(FAIL)ERROR$(ENDC)] Python test failed !\n"; \
+			if [ "$(remove_container)" = "false" ]; then \
+			printf "[$(OKGREEN)INFO$(ENDC)] Removing python containers on which test was run\n"; \
+			docker stop python_app && docker rm python_app || printf "[$(OKGREEN)INFO$(ENDC)] No containers to remove\n"; printf "exit" && exit 1 ; \
+			fi ; exit 1; \
 		fi
 ifneq ($(remove_container),true)
 	@printf "[$(OKGREEN)INFO$(ENDC)] Removing python containers on which test was run\n"
