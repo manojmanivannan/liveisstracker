@@ -1,0 +1,78 @@
+## Pre-built images used for build, app and pytest which are hosted in dockerhub
+
+**Build Stage** (manojmanivannan18/python-hellomaven:build) [used in build phase in GITLAB ci]
+```
+FROM openjdk:14-jdk-slim
+MAINTAINER MANOJMANIVANNAN
+RUN apt-get update \
+	&& apt-get install -y python3 python3-pip \
+	&& apt-get install -y wget git
+RUN wget http://apachemirror.wuchna.com/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+RUN tar -xzvf apache-maven-3.6.3-bin.tar.gz -C /opt && rm -f apache-maven-3.6.3-bin.tar.gz
+RUN echo 'export M2_HOME=/opt/apache-maven-3.6.3/' >> ~/.bashrc
+RUN echo 'export PATH=$PATH:$M2_HOME/bin' >> ~/.bashrc
+RUN echo 'export TERM=dumb' >> ~/.bashrc
+```
+
+**Test Stage** (manojmanivannan18/python-hellomaven:pytest) [used in test phase in GITLAB ci]
+
+```
+FROM manojmanivannan18/python-hellomaven:build
+MAINTAINER MANOJMANIVANNAN
+RUN apt-get install -y curl wget make && curl -fsSL https://get.docker.com -o get-docker.sh
+RUN pip3 install --upgrade pip setuptools
+RUN sh get-docker.sh
+RUN rm -rf /var/lib/apt/lists/*
+```
+ 
+**Python App** (manojmanivannan18/python-hellomaven:python-live) aka (manojmanivannan18/python-hellomaven:python) [used to build the python image that ends up as the application]
+
+```
+FROM python:3.6-slim
+MAINTAINER ManojManivannan
+RUN apt-get update && apt-get install -y gcc libgeos-dev
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+RUN pip3 install pytest
+RUN pip3 install --no-cache-dir https://github.com/matplotlib/basemap/archive/master.zip
+
+
+
+###### Entrypoint srcipt
+
+#Add Tini. TIni operates as a process subreaper for jupyter. This prevents kernel crahes
+#ENV TINI_VERSION v0.6.0
+#ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+#RUN chmod +x /usr/bin/tini
+#ENTRYPOINT ["/usr/bin/tini","--"]
+
+RUN useradd -d /home/manoj -m -s /bin/bash manoj && echo "manoj:manoj" | chpasswd && adduser manoj sudo
+RUN mkdir -p /home/manoj/liveisstracker
+RUN chown -R manoj:manoj /home/manoj/*
+USER manoj
+
+WORKDIR /home/manoj/liveisstracker
+EXPOSE 8501
+```
+
+**Python App streamlit 1.9.0** (manojmanivannan18/python-hellomaven:python-st-190) previously (manojmanivannan18/python-hellomaven:python) [used to build the python image that ends up as the application]
+```
+FROM python:3.6-slim
+MAINTAINER ManojManivannan
+RUN apt-get update && apt-get install -y gcc libgeos-dev
+COPY requirements.txt /tmp/requirements.txt
+
+
+RUN useradd -d /home/manoj -m -s /bin/bash manoj && echo "manoj:manoj" | chpasswd && adduser manoj sudo
+ENV PATH="/home/manoj/.local/bin:${PATH}"
+RUN mkdir -p /home/manoj/liveisstracker
+RUN chown -R manoj:manoj /home/manoj/*
+USER manoj
+
+RUN pip3 install --upgrade pip
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+
+WORKDIR /home/manoj/liveisstracker
+EXPOSE 8501
+```
+
