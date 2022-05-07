@@ -71,7 +71,7 @@ else
 	@make prepare_py_container
 endif
 	@printf "[$(OKGREEN)INFO$(ENDC)] Running test as user: $(TEST_USER)\n"
-	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest --junitxml=report.xml tests"; EXIT_CODE=$$?; \
+	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest tests"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
 		printf "[$(FAIL)ERROR$(ENDC)] Python test failed !\n"; \
 			if [ "$(remove_container)" = "false" ]; then \
