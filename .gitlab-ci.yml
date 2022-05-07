@@ -68,9 +68,4 @@ test:
     script:
       - make run_python_tests TEST_USER=manoj
     after_script:
-      - docker stop python_app && docker rm python_app
-    artifacts:
-      when: always
-      reports:
-        junit: target/generated-sources/liveisstracker/liveisstracker/report.xml
-
+      - docker stop python_app && docker rm python_apps
