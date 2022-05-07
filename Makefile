@@ -141,8 +141,12 @@ ifneq ($(shell docker images --filter "dangling=true" -q --no-trunc),)
 	@docker rmi --force $(shell docker images --filter "dangling=true" -q --no-trunc)
 endif
 ifneq ($(shell docker images | grep 'liveisstracker'),)
-	@printf "[$(OKGREEN)INFO$(ENDC)] Removing all docker images\n"
+	@printf "[$(OKGREEN)INFO$(ENDC)] Removing all docker images named liveisstracker\n"
 	@docker rmi --force $(shell docker images | grep 'liveisstracker'  | tr -s ' ' | cut -d ' ' -f3 | uniq -c | tr -s ' ' | cut -d ' ' -f3)
+endif
+ifneq ($(shell docker images | grep 'python-hellomaven'),)
+	@printf "[$(OKGREEN)INFO$(ENDC)] Removing all docker images named python-hellomaven\n"
+	@docker rmi --force $(shell docker images | grep 'python-hellomaven'  | tr -s ' ' | cut -d ' ' -f3 | uniq -c | tr -s ' ' | cut -d ' ' -f3)
 endif
 
 generate:
