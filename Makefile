@@ -33,7 +33,7 @@ endif
 
 test_user_name=
 ifdef TEST_USER
-override test_user_name=-uroot
+override test_user_name=-u$(TEST_USER)
 endif
 
 REPO_URL := registry.gitlab.com/manojm18
@@ -44,10 +44,10 @@ REGISTRY_URL := manojmanivannan18/python-hellomaven
 
 prepare_py_container:
 	@printf "[$(OKGREEN)INFO$(ENDC)] Pulling Python app base docker image\n"
-	@docker pull "${REGISTRY_URL}":python-live; EXIT_CODE=$$?; \
+	@docker pull "${REGISTRY_URL}":python-st-190; EXIT_CODE=$$?; \
 	if [ "$$EXIT_CODE" -eq 0 ]; then \
 		printf "[$(OKGREEN)INFO$(ENDC)] Starting up python container\n"; \
-		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-live" bash \
+		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-st-190" bash \
 		|| printf "[$(FAIL)ERROR$(ENDC)] Unable to run/start the python container\n" || exit 1;\
 	else \
 		printf "[$(FAIL)FAIL$(ENDC)] Unable to pull docker image for Python app base\n"; \
@@ -71,9 +71,13 @@ else
 	@make prepare_py_container
 endif
 	@printf "[$(OKGREEN)INFO$(ENDC)] Running test as user: $(TEST_USER)\n"
-	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest --junitxml=report.xml tests"; EXIT_CODE=$$?; \
+	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest tests"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
 		printf "[$(FAIL)ERROR$(ENDC)] Python test failed !\n"; \
+			if [ "$(remove_container)" = "false" ]; then \
+			printf "[$(OKGREEN)INFO$(ENDC)] Removing python containers on which test was run\n"; \
+			docker stop python_app && docker rm python_app || printf "[$(OKGREEN)INFO$(ENDC)] No containers to remove\n"; printf "exit" && exit 1 ; \
+			fi ; exit 1; \
 		fi
 ifneq ($(remove_container),true)
 	@printf "[$(OKGREEN)INFO$(ENDC)] Removing python containers on which test was run\n"

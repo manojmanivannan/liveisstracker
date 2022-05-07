@@ -1,16 +1,16 @@
-FROM manojmanivannan18/python-hellomaven:python
+FROM manojmanivannan18/python-hellomaven:python-st-190
 LABEL maintainer="ManojManivannan"
 
 COPY entrypoint.sh /tmp/
 
 ###### Copy python package
-COPY dist/${python_package}-${python_version}.tar.gz /tmp/
+COPY dist/${python_package}-${python_version}.tar.gz /home/manoj/
 ###### Install the python packages
-RUN pip3 install --no-cache-dir /tmp/${python_package}-${python_version}.tar.gz
+RUN pip3 install --no-cache-dir /home/manoj/${python_package}-${python_version}.tar.gz
 #RUN pip3 install --no-cache-dir https://github.com/matplotlib/basemap/archive/master.zip
 
 ###### Remove the packages
-RUN rm -rf /tmp/*.tar.gz
+RUN rm -rf /home/manoj/*.tar.gz
 
 ##### Copy the python folder into the docker container
 # optionally create folder and copy the python project
