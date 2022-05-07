@@ -179,7 +179,7 @@ help:
 	@printf "$(OKGREEN)run_python_tests	$(ENDC): Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass.\n"
 	@printf "$(OKGREEN)run_streamlit		$(ENDC): Runs the Streamlit server on the container.\n"
 	@printf "$(OKGREEN)package   		$(ENDC): Builds docker images and pushes to GITLAB registry\n"
-	@printf "$(OKGREEN)deep_clean		$(ENDC): Cleans mvn target folder, removes docker volumes, containers and images matching 'liveisstracker'\n"
+	@printf "$(OKGREEN)deep_clean		$(ENDC): Cleans mvn target folder, removes docker volumes, containers and images matching 'liveisstracker' & 'python-hellomaven'\n"
 	@printf "$(OKGREEN)launch    		$(ENDC): Generates resources and brings the docker-compose up 'builds images'\n"
 	@printf "$(OKGREEN)help      		$(ENDC): show this help\n"
 
