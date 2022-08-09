@@ -64,6 +64,7 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
                                         ),
                                         lat='lat',
                                         lon='lon', 
+                                        text='location',
                                         width=1300, 
                                         height=800)
         fig.update_traces(textposition='top center')
