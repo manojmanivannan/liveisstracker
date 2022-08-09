@@ -65,8 +65,8 @@ Requirements
 ------------
 
 * `Python <https://www.python.org>`_ >= 3.6
-* `Pandas <https://github.com/pydata/pandas>`_ (tested to work with 1.1.5)
-* `Numpy <http://www.numpy.org>`_ = 1.15.4
+* `Pandas <https://github.com/pydata/pandas>`_ 1.0.4
 * `geopy <https://pypi.org/project/geopy/>`_ = 1.20.0
 * `geographiclib <https://pypi.org/project/geographiclib/>`_ = 1.50
 * `plotly <https://pypi.org/project/plotly/>`_ = 5.3.1
+* basemap = 1.3.2
