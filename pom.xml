@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>MM.dd.HHmm</maven.build.timestamp.format>
 		<python_package>liveisstracker</python_package>
-		<description>A CLI based on the LiveIssTracker Project from https://gitlab.com/manojm18/liveisstracker</description> <!-- Python CLI utility-->
+		<description>A CLI to get the current position, speed, passing country and image of the location of International Space Station on a map [#liveisstracker]. Source: LiveIssTracker Project from https://gitlab.com/manojm18/liveisstracker.</description> <!-- Python CLI utility-->
 		<author>Manoj Manivannan</author>
         <python_version>${project.version}</python_version>
 		<author_email>manojm18@live.in</author_email>

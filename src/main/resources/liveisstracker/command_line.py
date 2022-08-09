@@ -59,12 +59,15 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
 
     if plot_iss:
         fig = px.scatter_geo(pd.DataFrame({'lat':[float(location["latitude"])],
-                                        'lon':[float(location["longitude"])]}
+                                        'lon':[float(location["longitude"])],
+                                        'location':[f'lat:{location["latitude"]}, lon:{location["longitude"]}']}
                                         ),
                                         lat='lat',
                                         lon='lon', 
+                                        text='location',
                                         width=1300, 
                                         height=800)
+        fig.update_traces(textposition='top center')
         fig.write_image(plot_iss)
         print(f'INFO: Map saved as {plot_iss}')
 
