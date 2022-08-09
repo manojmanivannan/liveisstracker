@@ -12,6 +12,9 @@ Live ISS Tracker
 
 
 A command line utility to get stats from International Space Station.
+Live ISS tracker was originally an application built around streamlit to show the position of
+the international space station on an orthographic view on the globe. This utility extends its 
+functionality to provide some useful stats of the international space station.
 
 
 .. code:: bash
@@ -67,6 +70,3 @@ Requirements
 * `geopy <https://pypi.org/project/geopy/>`_ = 1.20.0
 * `geographiclib <https://pypi.org/project/geographiclib/>`_ = 1.50
 * `plotly <https://pypi.org/project/plotly/>`_ = 5.3.1
-
-
-
