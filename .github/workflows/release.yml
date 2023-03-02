@@ -11,9 +11,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    container:
-      image: manojmanivannan18/python-hellomaven:pytest
+    runs-on: manojmanivannan18/python-hellomaven:pytest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
