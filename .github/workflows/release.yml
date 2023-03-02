@@ -11,23 +11,18 @@ on:
 
 jobs:
   test:
-    runs:
-      using: 'docker'
-      image: manojmanivannan18/python-hellomaven:pytest
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Setup environment
-        run: |
-          source ~/.bashrc
-      - name: Run tests
-        run: make run_python_tests TEST_USER=manoj
-      - name: Stop and remove Docker container
-        run: |
-          docker stop python_app
-          docker rm python_app
-    strategy:
-      fail-fast: false
+      - name: Run the build process with Docker
+        uses: addnab/docker-run-action@v3
+        with:
+            image: manojmanivannan18/python-hellomaven:pytest
+            options: -v ${{ github.workspace }}:/var/www
+            run: |
+                source ~/.bashrc
+                make run_python_tests TEST_USER=manoj
 
   # build-tagged:
   #   needs: test
