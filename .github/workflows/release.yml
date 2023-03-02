@@ -17,9 +17,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Run the build process with Docker
         uses: addnab/docker-run-action@v3
-        options: -v ${{ github.workspace }}:/work
         with:
             image: manojmanivannan18/python-hellomaven:pytest
+            options: -v ${{ github.workspace }}:/work
             run: |
                 make run_python_tests TEST_USER=manoj
 
