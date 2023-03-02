@@ -1,0 +1,99 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: manojmanivannan18/python-hellomaven:pytest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup environment
+        run: |
+          source ~/.bashrc
+      - name: Run tests
+        run: make run_python_tests TEST_USER=manoj
+      - name: Stop and remove Docker container
+        run: |
+          docker stop python_app
+          docker rm python_app
+    strategy:
+      fail-fast: false
+
+  build-tagged:
+    needs: test
+    runs-on: ubuntu-latest
+    container:
+      image: manojmanivannan18/python-hellomaven:build
+    env:
+      MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+      MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup environment
+        run: |
+          source ~/.bashrc
+          pip3 install -U twine
+      - name: Replace version in pom.xml
+        run: |
+          sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref }}<\/version>/g" pom.xml
+      - name: Build package
+        run: |
+          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --taggedBuild true
+      - name: Publish package
+        run: |
+          twine upload target/generated-sources/liveisstracker/dist/*
+
+  build-feature-bugfix:
+    needs: test
+    runs-on: ubuntu-latest
+    container:
+      image: manojmanivannan18/python-hellomaven:build
+    env:
+      MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+      MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup environment
+        run: |
+          source ~/.bashrc
+          pip3 install -U twine
+      - name: Build package
+        run: |
+          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
+      - name: Save package
+        run: |
+          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --get_version > .m2/current_branch_snapshot
+
+  build-develop:
+    needs: test
+    runs-on: ubuntu-latest
+    container:
+      image: manojmanivannan18/python-hellomaven:build
+    env:
+      MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+      MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup environment
+        run: |
+          source ~/.bashrc
+          pip3 install -U twine
+      - name: Build package
+        run: |
+          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
+      - name: Save package
+        run: |
+          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref
