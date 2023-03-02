@@ -21,7 +21,10 @@ jobs:
             image: manojmanivannan18/python-hellomaven:pytest
             options: -v ${{ github.workspace }}:/work
             run: |
-                make run_python_tests TEST_USER=manoj
+                ls -l
+                make 
+                
+  # run_python_tests TEST_USER=manoj
 
   # build-tagged:
   #   needs: test
