@@ -22,8 +22,7 @@ jobs:
             shell: bash
             options: -v ${{ github.workspace }}:/work -v 
             run: |
-                ls /home
-                cd /work && make run_python_tests TEST_USER=manoj
+                cd /work && source .bashrc && make run_python_tests TEST_USER=manoj
 
   # build-tagged:
   #   needs: test
