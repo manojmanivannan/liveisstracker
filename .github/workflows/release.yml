@@ -19,6 +19,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
             image: manojmanivannan18/python-hellomaven:pytest
+            shell: bash
             options: -v ${{ github.workspace }}:/work
             run: |
                 cd /work && source .bashrc && make run_python_tests TEST_USER=manoj
