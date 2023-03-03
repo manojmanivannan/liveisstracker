@@ -20,7 +20,7 @@ jobs:
         with:
             image: manojmanivannan18/python-hellomaven:pytest
             shell: bash
-            options: -v ${{ github.workspace }}:/work
+            options: -v ${{ github.workspace }}:/work -e MAVEN_CLI_OPTS="-s .m2/settings.xml --batch-mode" -e MAVEN_OPTS="-Dmaven.repo.local=.m2/repository"
             run: |
                 cd /work && source .bashrc && make run_python_tests TEST_USER=manoj
 
