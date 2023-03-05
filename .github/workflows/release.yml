@@ -16,8 +16,8 @@ jobs:
         runs-on: ubuntu-latest
         container:
             image: manojmanivannan18/python-hellomaven:pytest
-        volumes:
-            - ${{ github.workspace }}:/work
+            volumes:
+                - ${{ github.workspace }}:/work
         steps:
             - name: super-step
               shell: bash
