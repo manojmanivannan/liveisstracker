@@ -9,14 +9,6 @@ on:
     branches:
       - "*"
 
-# Action name
-name: Super Action
-
-# Here, this action will be enabled on all pushes.
-# Modify this to fit your needs.
-on:
-    push
-
 # Jobs section
 jobs:
     # The job that will use the container image you just pushed to ghcr.io
