@@ -9,54 +9,31 @@ on:
     branches:
       - "*"
 
-# Jobs section
 jobs:
-    # The job that will use the container image you just pushed to ghcr.io
-    pytest:
+    pytest_build:
         runs-on: ubuntu-latest
         permissions: write-all
         container:
             image: manojmanivannan18/python-hellomaven:pytest
             volumes:
                 - ${{ github.workspace }}:/work
+        env:
+          MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+          MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
         steps:
             - name: Check out the repo
               uses: actions/checkout@v2
               with:
                   fetch-depth: 0
-            - name: run-test
+            - name: run-test-build
               shell: bash
               run: |
                 echo "--This is running in Docker image--"
                 cd /work && source .bashrc 
                 make run_python_tests TEST_USER=root
+                pip3 install -U twine
+                /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --git_repo_url "registry.gitlab.com/manojm18"
 
-    build-feature-bugfix:
-        needs: pytest
-        runs-on: ubuntu-latest
-        permissions: write-all
-        container:
-          image: manojmanivannan18/python-hellomaven:build
-          volumes:
-              - ${{ github.workspace }}:/work
-        env:
-          MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
-          MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-        steps:
-          - name: Checkout out the repo
-            uses: actions/checkout@v2
-            with:
-                fetch-depth: 0
-          - name: Setup environment & Build
-            shell: bash
-            run: |
-              cd /work && source .bashrc
-              pip3 install -U twine
-              /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
-          - name: Save package
-            shell: bash
-            run: |
-              cd /work && source .bashrc
-              /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --get_version > .m2/current_branch_snapshot
+
 
 
