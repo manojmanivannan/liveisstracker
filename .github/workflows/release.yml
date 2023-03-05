@@ -15,16 +15,16 @@ jobs:
     super-job:
         runs-on: ubuntu-latest
         permissions: write-all
-        steps:
-          - name: Check out the repo
-            uses: actions/checkout@v2
-            with:
-                fetch-depth: 0
+
         container:
             image: manojmanivannan18/python-hellomaven:pytest
             volumes:
                 - ${{ github.workspace }}:/work
         steps:
+            - name: Check out the repo
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
             - name: super-step
               shell: bash
               run: |
