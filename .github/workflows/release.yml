@@ -31,8 +31,9 @@ jobs:
                 # Whatever commands you want to run here using the container with your
                 # new Docker image at ghcr.io!
                 echo "--This is running in my custom Docker image--"
-                cd /work && source .bashrc && pwd && apt-get install -y tree
-                tree
+                cd /work && source .bashrc && ls -l && make generate && ls -l
+                # apt-get install -y tree
+                # tree
                 make run_python_tests TEST_USER=manoj
 
 
