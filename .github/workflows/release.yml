@@ -16,6 +16,8 @@ jobs:
         runs-on: ubuntu-latest
         container:
             image: manojmanivannan18/python-hellomaven:pytest
+        volumes:
+            - ${{ github.workspace }}:/work
         steps:
             - name: super-step
               shell: bash
@@ -23,7 +25,7 @@ jobs:
                 # Whatever commands you want to run here using the container with your
                 # new Docker image at ghcr.io!
                 echo "--This is running in my custom Docker image--"
-                source ~/.bashrc && make run_python_tests TEST_USER=manoj
+                cd /work && source .bashrc && make run_python_tests TEST_USER=manoj
 
 
 # jobs:
