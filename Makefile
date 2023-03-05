@@ -47,7 +47,6 @@ prepare_py_container:
 	@docker pull "${REGISTRY_URL}":python-st-190; EXIT_CODE=$$?; \
 	if [ "$$EXIT_CODE" -eq 0 ]; then \
 		printf "[$(OKGREEN)INFO$(ENDC)] Starting up python container\n"; \
-		echo docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" && ls -l "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker"; \
 		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-st-190" bash ; \
 		echo copying && docker cp  "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker" python_app:/home/manoj/ \
 		|| printf "[$(FAIL)ERROR$(ENDC)] Unable to run/start the python container\n" || exit 1;\
@@ -73,7 +72,7 @@ else
 	@make prepare_py_container
 endif
 	@printf "[$(OKGREEN)INFO$(ENDC)] Running test as user: $(TEST_USER)\n"
-	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; echo; ls -l; echo; pwd; python -m pytest -p no:cacheprovider tests"; EXIT_CODE=$$?; \
+	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest -p no:cacheprovider tests"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
 		printf "[$(FAIL)ERROR$(ENDC)] Python test failed !\n"; \
 			if [ "$(remove_container)" = "false" ]; then \

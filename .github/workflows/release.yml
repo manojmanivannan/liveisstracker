@@ -12,7 +12,7 @@ on:
 # Jobs section
 jobs:
     # The job that will use the container image you just pushed to ghcr.io
-    super-job:
+    pytest:
         runs-on: ubuntu-latest
         permissions: write-all
 
@@ -31,9 +31,7 @@ jobs:
                 # Whatever commands you want to run here using the container with your
                 # new Docker image at ghcr.io!
                 echo "--This is running in my custom Docker image--"
-                cd /work && source .bashrc && ls -l && make generate && ls -l
-                # apt-get install -y tree
-                # tree
+                cd /work && source .bashrc 
                 make run_python_tests TEST_USER=root
 
 
