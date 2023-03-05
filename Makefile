@@ -72,7 +72,7 @@ else
 endif
 	@printf "[$(OKGREEN)INFO$(ENDC)] Running test as user: $(TEST_USER)\n"
 	@docker ps
-	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; python -m pytest -p no:cacheprovider tests"; EXIT_CODE=$$?; \
+	@docker exec -t $(test_user_name) python_app bash -c "export PYTEST_ADDOPTS="-v"; ls -l;python -m pytest -p no:cacheprovider tests"; EXIT_CODE=$$?; \
 		if [ "$$EXIT_CODE" -ne 0 ]; then \
 		printf "[$(FAIL)ERROR$(ENDC)] Python test failed !\n"; \
 			if [ "$(remove_container)" = "false" ]; then \
