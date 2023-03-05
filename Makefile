@@ -48,8 +48,8 @@ prepare_py_container:
 	if [ "$$EXIT_CODE" -eq 0 ]; then \
 		printf "[$(OKGREEN)INFO$(ENDC)] Starting up python container\n"; \
 		echo docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" && ls -l "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker"; \
-		echo copying && tar Ccf $(dirname /work/target/generated-sources/liveisstracker/liveisstracker) - $(basename /work/target/generated-sources/liveisstracker/liveisstracker) | docker exec -i python_app tar Cxf /home/manoj/liveisstracker/ - ; \
-		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-st-190" bash \
+		docker run -it -d -p 8501:8501 -v "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker" -v "$(shell pwd)/map_secret.txt:/run/secrets/mapbox_token" -e MAPBOX_TOKEN='/run/secrets/mapbox_token' --name python_app "$(REGISTRY_URL)":"python-st-190" bash ; \
+		echo copying && docker cp  "$(shell pwd)/target/generated-sources/liveisstracker/liveisstracker" python_app:/home/manoj/liveisstracker/ ; \
 		|| printf "[$(FAIL)ERROR$(ENDC)] Unable to run/start the python container\n" || exit 1;\
 	else \
 		printf "[$(FAIL)FAIL$(ENDC)] Unable to pull docker image for Python app base\n"; \
