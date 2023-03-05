@@ -47,16 +47,16 @@ jobs:
             uses: actions/checkout@v2
             with:
                 fetch-depth: 0
-          - name: Setup environment
+          - name: Setup environment & Build
             shell: bash
             run: |
               cd /work && source .bashrc
               pip3 install -U twine
-          - name: Build package
-            run: |
-              cd /work && /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
+              /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
           - name: Save package
+            shell: bash
             run: |
-              cd /work && /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --get_version > .m2/current_branch_snapshot
+              cd /work && source .bashrc
+              /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --get_version > .m2/current_branch_snapshot
 
 
