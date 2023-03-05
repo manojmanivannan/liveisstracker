@@ -34,7 +34,7 @@ jobs:
                 cd /work && source .bashrc && ls -l && make generate && ls -l
                 # apt-get install -y tree
                 # tree
-                make run_python_tests TEST_USER=manoj
+                make run_python_tests TEST_USER=root
 
 
 # jobs:
