@@ -9,24 +9,47 @@ on:
     branches:
       - "*"
 
+# Action name
+name: Super Action
+
+# Here, this action will be enabled on all pushes.
+# Modify this to fit your needs.
+on:
+    push
+
+# Jobs section
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-        with:
-            fetch-depth: 0
-      - name: Run Py Tests
-        uses: addnab/docker-run-action@v3
-        with:
+    # The job that will use the container image you just pushed to ghcr.io
+    super-job:
+        runs-on: ubuntu-latest
+        container:
             image: manojmanivannan18/python-hellomaven:pytest
-            shell: bash
-            options: -v ${{ github.workspace }}:/work
-            run: |
-                export MAVEN_CLI_OPTS='-s .m2/settings.xml --batch-mode' && export MAVEN_OPTS='-Dmaven.repo.local=.m2/repository'
-                cd /work && source .bashrc && make run_python_tests TEST_USER=manoj
+        steps:
+            - name: super-step
+              shell: bash
+              run: |
+                # Whatever commands you want to run here using the container with your
+                # new Docker image at ghcr.io!
+                echo "--This is running in my custom Docker image--"
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     permissions: write-all
+#     steps:
+#       - name: Check out the repo
+#         uses: actions/checkout@v2
+#         with:
+#             fetch-depth: 0
+#       - name: Run Py Tests
+#         uses: addnab/docker-run-action@v3
+#         with:
+#             image: manojmanivannan18/python-hellomaven:pytest
+#             shell: bash
+#             options: -v ${{ github.workspace }}:/work
+#             run: |
+#                 export MAVEN_CLI_OPTS='-s .m2/settings.xml --batch-mode' && export MAVEN_OPTS='-Dmaven.repo.local=.m2/repository'
+#                 cd /work && source .bashrc && make run_python_tests TEST_USER=manoj
 
   # build-tagged:
   #   needs: test
@@ -53,26 +76,26 @@ jobs:
   #       run: |
   #         twine upload target/generated-sources/liveisstracker/dist/*
 
-  build-feature-bugfix:
-    needs: test
-    runs-on: ubuntu-latest
-    container:
-      image: manojmanivannan18/python-hellomaven:build
-    env:
-      MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
-      MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup environment
-        run: |
-          source ~/.bashrc
-          pip3 install -U twine
-      - name: Build package
-        run: |
-          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
-      - name: Save package
-        run: |
-          /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --get_version > .m2/current_branch_snapshot
+  # build-feature-bugfix:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: manojmanivannan18/python-hellomaven:build
+  #   env:
+  #     MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  #     MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Setup environment
+  #       run: |
+  #         source ~/.bashrc
+  #         pip3 install -U twine
+  #     - name: Build package
+  #       run: |
+  #         /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }}
+  #     - name: Save package
+  #       run: |
+  #         /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --get_version > .m2/current_branch_snapshot
 
 
