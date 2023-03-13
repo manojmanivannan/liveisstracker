@@ -3,15 +3,19 @@ import urllib.request as url
 from urllib.error import URLError, HTTPError
 import json, time
 from geopy.distance import geodesic
-try:
-    from dbsql.dbconnections import *
-except ModuleNotFoundError:
-    from liveisstracker.dbsql.dbconnections import *
 from geopy.geocoders import Nominatim
 try:
     from mylogger.iss_logging import logger
 except ModuleNotFoundError:
     from liveisstracker.mylogger.iss_logging import logger
+
+try:
+    from dbsql.dbconnections import *
+except ModuleNotFoundError:
+    try:
+        from liveisstracker.dbsql.dbconnections import *
+    except:
+        logger.debug('No DB connection capabilities imported')
 
 geolocator = Nominatim(user_agent="my-application",timeout=3)
 
