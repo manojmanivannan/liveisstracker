@@ -1,10 +1,15 @@
-import mysql.connector
-from mysql.connector import errorcode
-from mysql.connector import Error
 try:
     from mylogger.iss_logging import logger
 except ModuleNotFoundError:
     from ..mylogger.iss_logging import logger
+
+try:
+    import mysql.connector
+    from mysql.connector import errorcode
+    from mysql.connector import Error
+except ModuleNotFoundError:
+    logger.debug('Unable to import DB connection module')
+    raise ModuleNotFoundError
 
 #mysql -P 3606 -h localhost -u root --password=root
 
