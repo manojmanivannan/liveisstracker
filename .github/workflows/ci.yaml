@@ -22,9 +22,9 @@ jobs:
       #   uses: docker/setup-buildx-action@v1
       - name: Run Python tests
         uses: docker://manojmanivannan18/python-hellomaven:pytest
-        with:
-          entrypoint: make
-          args: run_python_tests TEST_USER=manoj
+        run: |
+          source ~/.bashrc
+          make run_python_tests TEST_USER=manoj
 
 
   build:
