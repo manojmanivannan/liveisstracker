@@ -21,7 +21,7 @@ jobs:
           MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
           MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
           GITLAB_REPO_USER: ${{ github.actor }}
-          GITLAB_REPO_PASS: ${{ secrets.GITLAB_REPO_PASS }}
+          GITLAB_REPO_PASS: ${{ secrets.GITLAB_TOKEN }}
         steps:
             - name: Check out the repo
               uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
               with:
                 registry: ghcr.io
                 username: ${{github.actor}}
-                password: ${{secrets.GITLAB_REPO_PASS}}
+                password: ${{secrets.GITLAB_TOKEN}}
             - name: run-test-build
               shell: bash
               run: |
