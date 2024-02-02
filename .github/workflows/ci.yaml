@@ -43,6 +43,12 @@ jobs:
         image: docker:18-dind
         options: --privileged
     steps:
+      - name: Cache maven
+        uses: actions/cache@v3
+        with:
+          path: .m2/
+          key: v1-npm-deps-${{ hashFiles('**/settings.xml') }}
+          restore-keys: v1-npm-deps-
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Set up Docker Buildx
