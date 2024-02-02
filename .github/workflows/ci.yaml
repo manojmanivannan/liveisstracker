@@ -32,7 +32,7 @@ jobs:
                 cd /work && source .bashrc 
                 make run_python_tests TEST_USER=root
                 pip3 install -U twine
-                /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --git_repo_url "ghcr.io/${{ github.repository }}"
+                /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --git_repo_url "ghcr.io/manojmanivannan/liveisstracker"
 
 
 
