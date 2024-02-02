@@ -1,0 +1,65 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+      - '*'
+
+
+jobs:
+  test:
+    name: Run Python tests
+    runs-on: manojmanivannan18/python-hellomaven:pytest
+    services:
+      docker:
+        image: docker:18-dind
+        options: --privileged
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+      - name: Run Python tests
+        # uses: docker://manojmanivannan18/python-hellomaven:pytest
+        run: |
+          source ~/.bashrc
+          make run_python_tests TEST_USER=manoj
+
+
+  # build:
+  #   name: Build and Release
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     docker:
+  #       image: docker:18-dind
+  #       options: --privileged
+  #   steps:
+  #     - name: Cache maven
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: .m2/
+  #         key: v1-npm-deps-${{ hashFiles('**/settings.xml') }}
+  #         restore-keys: v1-npm-deps-
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Build and Release tagged
+  #       if: startsWith(github.ref, 'refs/tags/')
+  #       run: |
+  #         sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref_name }}<\/version>/g" pom.xml
+  #         /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
+  #         /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true
+  #         twine upload target/generated-sources/liveisstracker/dist/*
+  #     - name: Build and Release branches
+  #       if: startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/develop'
+  #       run: |
+  #         /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
+  #         /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }}
+  #     - name: Build and Release develop
+  #       if: github.ref == 'refs/heads/develop'
+  #       run: |
+  #         /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH} --get_version > .m2/current_branch_snapshot
+  #         /bin/bash .m2/gitlab_build.sh --branch ${CI_DEFAULT_BRANCH}
