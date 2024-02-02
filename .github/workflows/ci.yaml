@@ -32,7 +32,7 @@ jobs:
               with:
                 registry: ghcr.io
                 username: ${{github.actor}}
-                password: ${{secrets.GITHUB_TOKEN}}
+                password: ${{secrets.GITLAB_REPO_PASS}}
             - name: run-test-build
               shell: bash
               run: |
