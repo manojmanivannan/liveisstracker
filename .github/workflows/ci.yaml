@@ -20,8 +20,8 @@ jobs:
         env:
           MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
           MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-          GITLAB_REPO_USER: ${{github.actor}}
-          GITLAB_REPO_PASS: ${{secrets.GITLAB_REPO_PASS}}
+          GITLAB_REPO_USER: ${{ github.actor }}
+          GITLAB_REPO_PASS: ${{ secrets.GITLAB_REPO_PASS }}
         steps:
             - name: Check out the repo
               uses: actions/checkout@v2
