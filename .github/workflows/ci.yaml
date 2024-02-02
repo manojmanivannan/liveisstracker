@@ -29,8 +29,7 @@ jobs:
         with:
           entrypoint: make
           args: run_python_tests TEST_USER=manoj
-    cleanup:
-      docker stop ${{ job.container.id }}
+
 
   build:
     name: Build and Release
