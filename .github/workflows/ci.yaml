@@ -10,7 +10,7 @@ on:
 jobs:
   test:
     name: Run Python tests
-    runs-on: manojmanivannan18/python-hellomaven:pytest
+    runs-on: ubuntu-latest
     services:
       docker:
         image: docker:18-dind
@@ -18,7 +18,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
       - name: Run Python tests
+        uses: docker://manojmanivannan18/python-hellomaven:pytest
         with:
           entrypoint: make
           args: run_python_tests TEST_USER=manoj
