@@ -93,6 +93,6 @@ jobs:
             sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref_name }}<\/version>/g" pom.xml
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --git_repo_url "$GITLAB_REPO_URL"
-            pip3 install -U twine
+            pip3 install -U twine wheel
             twine upload --verbose target/generated-sources/liveisstracker/dist/*
 
