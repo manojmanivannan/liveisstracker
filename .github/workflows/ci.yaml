@@ -57,8 +57,7 @@ jobs:
         GITLAB_REPO_USER: ${{ github.actor }}
         GITLAB_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
         GITLAB_REPO_URL: "ghcr.io/manojmanivannan/liveisstracker"
-        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+
       steps:
         - name: Check out the repo
           uses: actions/checkout@v2
