@@ -75,13 +75,13 @@ jobs:
         - name: build-push-develop
           if: github.ref == 'refs/heads/develop'
           run: |
-            source ~/.bashrc 
+            cd /work && ls -all && source /root/.bashrc 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }}
         - name: build-push-tag
           if: startsWith(github.ref, 'refs/tags/')
           run: |
-            cd /work && source .bashrc 
+            cd /work && ls -all && source .bashrc 
             sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref_name }}<\/version>/g" pom.xml
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true
