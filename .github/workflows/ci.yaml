@@ -85,6 +85,9 @@ jobs:
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
         - name: build-push-tag
           if: contains(github.ref, '/tags/')
+          env:
+            TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
           shell: bash
           run: |
             cd /work && source .bashrc 
