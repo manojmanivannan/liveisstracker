@@ -57,6 +57,8 @@ jobs:
         GITLAB_REPO_USER: ${{ github.actor }}
         GITLAB_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
         GITLAB_REPO_URL: "ghcr.io/manojmanivannan/liveisstracker"
+        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
 
       steps:
         - name: Check out the repo
@@ -92,5 +94,5 @@ jobs:
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --git_repo_url "$GITLAB_REPO_URL"
             pip3 install -U twine
-            twine upload --verbose -u ${{ secrets.TWINE_USERNAME }} -p ${{ secrets.TWINE_PASSWORD }} target/generated-sources/liveisstracker/dist/*
+            twine upload --verbose target/generated-sources/liveisstracker/dist/*
 
