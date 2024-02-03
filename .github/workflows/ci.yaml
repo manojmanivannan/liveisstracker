@@ -85,9 +85,6 @@ jobs:
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
         - name: build-push-tag
           if: contains(github.ref, '/tags/')
-          env:
-            TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-            TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
           shell: bash
           run: |
             cd /work && source .bashrc 
@@ -95,5 +92,5 @@ jobs:
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --git_repo_url "$GITLAB_REPO_URL"
             pip3 install -U twine
-            twine upload --verbose target/generated-sources/liveisstracker/dist/*
+            twine upload --verbose -u ${{ secrets.TWINE_USERNAME }} -p ${{ secrets.TWINE_PASSWORD }} target/generated-sources/liveisstracker/dist/*
 
