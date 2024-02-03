@@ -10,7 +10,7 @@ on:
       - "*"
 
 jobs:
-    pytest_build:
+    pytest:
         runs-on: ubuntu-latest
         permissions: write-all
         container:
@@ -32,21 +32,57 @@ jobs:
               with:
                 path: .m2/
                 key: maven-deps
-                restore-keys: maven-deps-restore
             - name: run-test-build
               shell: bash
               run: |
                 echo "--This is running in Docker image--"
                 cd /work && source .bashrc 
                 make run_python_tests TEST_USER=root
-                pip3 install -U twine
-                /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "ghcr.io/manojmanivannan/liveisstracker"
+                # pip3 install -U twine
+                # /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "ghcr.io/manojmanivannan/liveisstracker"
 
-
-
-
-
-
+    build:
+      needs: pytest
+      runs-on: ubuntu-latest
+      permissions: write-all
+      container:
+        image: manojmanivannan18/python-hellomaven:build
+        volumes:
+          - ${{ github.workspace }}:/work    
+      env:
+        MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+        MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+        GITLAB_REPO_USER: ${{ github.actor }}
+        GITLAB_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
+      steps:
+        - name: Check out the repo
+          uses: actions/checkout@v2
+          with:
+              fetch-depth: 0
+        - name: Cache maven
+          uses: actions/cache@v3
+          with:
+            path: .m2/
+            key: maven-deps
+            restore-keys: maven-deps
+        - name: build-push-branches
+          if: startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/develop'
+          shell: bash
+          run: |
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }}
+        - name: build-push-develop
+          if: github.ref == 'refs/heads/develop'
+          run: |
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }}
+        - name: build-push-tag
+          if: startsWith(github.ref, 'refs/tags/')
+          run: |
+            sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref_name }}<\/version>/g" pom.xml
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true
+            twine upload target/generated-sources/liveisstracker/dist/*
 
   # build:
   #   name: Build and Release
