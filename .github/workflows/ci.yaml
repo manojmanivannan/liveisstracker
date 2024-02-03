@@ -54,6 +54,7 @@ jobs:
         MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
         GITLAB_REPO_USER: ${{ github.actor }}
         GITLAB_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
+        GITLAB_REPO_URL: "ghcr.io/manojmanivannan/liveisstracker"
       steps:
         - name: Check out the repo
           uses: actions/checkout@v2
