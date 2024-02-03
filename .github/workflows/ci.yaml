@@ -27,6 +27,12 @@ jobs:
               uses: actions/checkout@v2
               with:
                   fetch-depth: 0
+            - name: Cache maven
+              uses: actions/cache@v3
+              with:
+                path: .m2/
+                key: maven-deps
+                restore-keys: maven-deps-restore
             - name: run-test-build
               shell: bash
               run: |
@@ -34,7 +40,7 @@ jobs:
                 cd /work && source .bashrc 
                 make run_python_tests TEST_USER=root
                 pip3 install -U twine
-                /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref }} --git_repo_url "ghcr.io/manojmanivannan/liveisstracker"
+                /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "ghcr.io/manojmanivannan/liveisstracker"
 
 
 
