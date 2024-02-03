@@ -89,11 +89,9 @@ jobs:
           shell: bash
           run: |
             cd /work && source .bashrc 
-            echo "POM before" && cat pom.xml
             sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref_name }}<\/version>/g" pom.xml
-            echo "POM after" && cat pom.xml
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --git_repo_url "$GITLAB_REPO_URL"
             pip3 install -U twine
-            twine upload target/generated-sources/liveisstracker/dist/*
+            twine upload --verbose target/generated-sources/liveisstracker/dist/*
 
