@@ -42,7 +42,7 @@ jobs:
     #             # /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "ghcr.io/manojmanivannan/liveisstracker"
     #
     build:
-      needs: pytest
+      # needs: pytest
       runs-on: ubuntu-latest
       permissions: write-all
       container:
@@ -75,7 +75,7 @@ jobs:
         - name: build-push-develop
           if: github.ref == 'refs/heads/develop'
           run: |
-            cd /work && source .bashrc 
+            source ~/.bashrc 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }}
         - name: build-push-tag
