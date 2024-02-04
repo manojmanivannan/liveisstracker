@@ -3,7 +3,9 @@ name: CI/CD
 on:
   push:
     branches:
-      - '*'
+      - 'develop'
+      - 'feature/**'
+      - 'bugfix/**'
     tags:
       - '*'
   pull_request:
