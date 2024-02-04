@@ -144,18 +144,7 @@ fi
 
 if [ "${GET_VERSION_ONLY}" -eq 1 ]
 then
-    header "Branch info"
-    echo "  Branch name:      ${GIT_BRANCH}"
-    echo "  Branch type:      ${GIT_BRANCH_TYPE}"
-    echo "  Tag version:      ${GIT_DESCRIBE_VER}"
-    echo "  Builds since tag: ${GIT_DESCRIBE_SINCE}"
-    echo "  Last checkin SHA: ${GIT_DESCRIBE_SHA}"
-    echo ""
-    header "Build info"
-    echo "  Is tagged build?: ${IS_TAG_BUILD}"
-    echo "  Maven settings:   ${MVN_SETTINGS}"
-    echo "  Build version:    ${VER_FULL}"
-    echo "  Repo URL:         ${GIT_REPO_URL}"
+    echo "${VER_FULL}";
     exit 0
 fi
 
