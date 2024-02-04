@@ -69,13 +69,13 @@ jobs:
             path: .m2/
             key: maven-deps
             restore-keys: maven-deps
-        - name: Build for PRs
-          if: github.event_name == 'pull_request'
-          shell: bash
-          run: |
-            cd /work && source .bashrc 
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --get_version 
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --git_repo_url "$GITLAB_REPO_URL"
+        # - name: Build for PRs
+        #   if: github.event_name == 'pull_request'
+        #   shell: bash
+        #   run: |
+        #     cd /work && source .bashrc 
+        #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --get_version 
+        #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --git_repo_url "$GITLAB_REPO_URL"
         - name: Build for develop or branches
           if: ${{ !contains(github.ref, '/tags/') && contains(github.ref, 'refs/heads/') }}
           shell: bash
