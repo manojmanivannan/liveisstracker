@@ -24,7 +24,7 @@
 		<author>Manoj Manivannan</author>
         <python_version>${project.version}</python_version>
 		<author_email>manojm18@live.in</author_email>
-		<source_url>https://gitlab.com/manojm18</source_url>
+		<source_url>https://github.com/manojmanivannan</source_url>
 	</properties>
 
 	<build>

@@ -3,8 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - develop
-      - main
+      - '*'
     tags:
       - '*'
   pull_request:
@@ -59,30 +58,30 @@ jobs:
 
       steps:
         - name: Check out the repo
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
           with:
               fetch-depth: 0
         - name: Cache maven
-          uses: actions/cache@v3
+          uses: actions/cache@v4
           with:
             path: .m2/
             key: maven-deps
             restore-keys: maven-deps
-        - name: build-push-branches
-          if: startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/develop'
+        - name: Build for PRs
+          if: github.head_ref != 'refs/heads/develop'
+          shell: bash
+          run: |
+            cd /work && source .bashrc 
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --git_repo_url "$GITLAB_REPO_URL"
+        - name: Build for develop or branches
+          if: ${{ !contains(github.ref, '/tags/') && contains(github.ref, 'refs/heads/') }}
           shell: bash
           run: |
             cd /work && source .bashrc 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
-        - name: build-push-develop
-          if: github.ref == 'refs/heads/develop'
-          shell: bash
-          run: |
-            cd /work && source .bashrc 
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
-        - name: build-push-tag
+        - name: Build for Tags/Release
           if: contains(github.ref, '/tags/')
           env:
             TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}

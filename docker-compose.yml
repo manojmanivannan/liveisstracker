@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   app:
-    image: registry.gitlab
+    image: ghcr.io.image
     volumes:
       - ./target/generated-sources/liveisstracker/liveisstracker:/home/manoj/liveisstracker
 
