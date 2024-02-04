@@ -36,7 +36,7 @@ ifdef TEST_USER
 override test_user_name=-u$(TEST_USER)
 endif
 
-REPO_URL := registry.gitlab.com/manojm18
+REPO_URL := ghcr.io/manojmanivannan/liveisstracker
 REGISTRY_URL := manojmanivannan18/python-hellomaven
 
 #py_project_version := $(shell mvn -q help:evaluate -Dexpression=project.version -DforceStdout)

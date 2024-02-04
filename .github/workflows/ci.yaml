@@ -6,9 +6,9 @@ on:
       - '*'
     tags:
       - '*'
-  pull_request:
-    branches:
-      - "*"
+  # pull_request:
+  #   branches:
+  #     - "*"
 
 jobs:
     pytest:
@@ -67,15 +67,15 @@ jobs:
             path: .m2/
             key: maven-deps
             restore-keys: maven-deps
-        # - name: build-push-branches
-        #   if: startsWith(github.ref, 'refs/remotes/pull') && github.ref != 'refs/heads/develop'
-        #   shell: bash
-        #   run: |
-        #     cd /work && source .bashrc 
-        #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
-        #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
+        - name: Build for PRs
+          if: startsWith(github.ref, 'refs/remotes/pull') && github.ref != 'refs/heads/develop'
+          shell: bash
+          run: |
+            cd /work && source .bashrc 
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
         - name: Build for develop or branches
-          if: ${{ !contains(github.ref, '/tags/') }}
+          if: ${{ !contains(github.ref, '/tags/') && contains(github.ref, 'refs/heads/') }}
           shell: bash
           run: |
             cd /work && source .bashrc 
