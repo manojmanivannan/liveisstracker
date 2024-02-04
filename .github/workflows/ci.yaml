@@ -68,7 +68,7 @@ jobs:
             key: maven-deps
             restore-keys: maven-deps
         - name: Build for PRs
-          if: startsWith(github.ref, 'refs/remotes/pull') && github.ref != 'refs/heads/develop'
+          if: github.head_ref != 'refs/heads/develop'
           shell: bash
           run: |
             cd /work && source .bashrc 
