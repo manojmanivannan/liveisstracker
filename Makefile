@@ -169,7 +169,7 @@ launch:
 		fi;
 	@$$(sed -i 's#image: ghcr.io.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
 	@docker-compose --compatibility up -d 
-	@$$(sed -i 's#image: ghcr.io*#image: ghcr.io.image#g' docker-compose.yml)
+	@$$(sed -i 's#image: ghcr.io.*#image: ghcr.io.image#g' docker-compose.yml)
 
 
 help:

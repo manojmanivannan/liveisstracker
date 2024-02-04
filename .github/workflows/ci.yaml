@@ -3,7 +3,9 @@ name: CI/CD
 on:
   push:
     branches:
-      - '*'
+      - 'develop'
+      - 'feature/**'
+      - 'bugfix/**'
     tags:
       - '*'
   pull_request:
@@ -25,11 +27,11 @@ jobs:
           GITLAB_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
         steps:
             - name: Check out the repo
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
             - name: Cache maven
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                 path: .m2/
                 key: maven-deps
@@ -68,18 +70,18 @@ jobs:
             key: maven-deps
             restore-keys: maven-deps
         - name: Build for PRs
-          if: github.head_ref != 'refs/heads/develop'
+          if: github.event_name == 'pull_request'
           shell: bash
           run: |
             cd /work && source .bashrc 
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --get_version 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.head_ref }} --git_repo_url "$GITLAB_REPO_URL"
         - name: Build for develop or branches
           if: ${{ !contains(github.ref, '/tags/') && contains(github.ref, 'refs/heads/') }}
           shell: bash
           run: |
             cd /work && source .bashrc 
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
         - name: Build for Tags/Release
           if: contains(github.ref, '/tags/')
@@ -90,7 +92,7 @@ jobs:
           run: |
             cd /work && source .bashrc 
             sed -i "0,/<version>.*/s/<version>.*/<version>${{ github.ref_name }}<\/version>/g" pom.xml
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version > .m2/current_branch_snapshot
+            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --get_version 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --taggedBuild true --git_repo_url "$GITLAB_REPO_URL"
             pip3 install -U twine wheel
             twine upload target/generated-sources/liveisstracker/dist/*

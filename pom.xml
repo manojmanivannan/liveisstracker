@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.manojm18</groupId>
 	<artifactId>liveisstracker</artifactId>
-	<version>1.1.3</version>
+	<version>1.1.5</version>
 
 	<repositories>
 		<repository>
