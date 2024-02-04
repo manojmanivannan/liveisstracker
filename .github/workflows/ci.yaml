@@ -75,8 +75,8 @@ jobs:
         #     cd /work && source .bashrc 
         #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
         #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
-        - name: Build for develop or PR
-          if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/remotes/pull')
+        - name: Build for develop or branches
+          if: ! contains(github.ref, '/tags/')
           shell: bash
           run: |
             cd /work && source .bashrc 
