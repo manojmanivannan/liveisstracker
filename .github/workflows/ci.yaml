@@ -68,21 +68,21 @@ jobs:
             path: .m2/
             key: maven-deps
             restore-keys: maven-deps
-        - name: build-push-branches
-          if: startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/develop'
+        # - name: build-push-branches
+        #   if: startsWith(github.ref, 'refs/remotes/pull') && github.ref != 'refs/heads/develop'
+        #   shell: bash
+        #   run: |
+        #     cd /work && source .bashrc 
+        #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
+        #     /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
+        - name: Build for develop or PR
+          if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/remotes/pull')
           shell: bash
           run: |
             cd /work && source .bashrc 
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
             /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
-        - name: build-push-develop
-          if: github.ref == 'refs/heads/develop'
-          shell: bash
-          run: |
-            cd /work && source .bashrc 
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --get_version > .m2/current_branch_snapshot
-            /bin/bash .m2/gitlab_build.sh --branch ${{ github.ref_name }} --git_repo_url "$GITLAB_REPO_URL"
-        - name: build-push-tag
+        - name: Build for Tags/Release
           if: contains(github.ref, '/tags/')
           env:
             TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
