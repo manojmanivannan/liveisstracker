@@ -2,7 +2,7 @@
 TOPDIR=.
 
 MAVEN_COMPOSE_ARGS:= \
-		-Denv.GITLAB_REPO_URL=registry.gitlab.com/manojm18 \
+		-Denv.GITLAB_REPO_URL=ghcr.io/manojmanivannan/liveisstracker \
 		-Pgitlab-resource
 
 OKGREEN := \033[32m
@@ -167,9 +167,9 @@ launch:
 		printf "[$(WARNING)WARN$(ENDC)] No registry image for current branch. Build image first !\n"; \
 		printf "[$(OKGREEN)INFO$(ENDC)] Using local image if present.\n"; \
 		fi;
-	@$$(sed -i 's#image: registry.gitlab.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
+	@$$(sed -i 's#image: ghcr.io.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
 	@docker-compose --compatibility up -d 
-	@$$(sed -i 's#image: registry.*#image: registry.gitlab#g' docker-compose.yml)
+	@$$(sed -i 's#image: ghcr.io*#image: ghcr.io.image#g' docker-compose.yml)
 
 
 help:
