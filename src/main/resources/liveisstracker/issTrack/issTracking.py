@@ -17,7 +17,7 @@ except ModuleNotFoundError:
     except:
         logger.debug('No DB connection capabilities imported')
 
-geolocator = Nominatim(user_agent="my-application",timeout=3)
+geolocator = Nominatim(user_agent="my-app",timeout=3)
 
 
 def get_city_location(city_name):
