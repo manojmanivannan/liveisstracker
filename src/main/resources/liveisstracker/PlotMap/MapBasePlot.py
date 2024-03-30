@@ -56,7 +56,7 @@ class BasemapPlot:
         distance_to_home = TrackerISS.get_distance_btwn_locations(location_1 = (self.home_latitude, self.home_longitude),\
                                                                     location_2 = iss)
          
-        location = Nominatim(user_agent="my-application",timeout=3)\
+        location = Nominatim(user_agent="liveiss-application",timeout=3)\
         .reverse('{},{}'.format(self.gps_location['latitude'],\
             self.gps_location['longitude']), language='en')
         try:

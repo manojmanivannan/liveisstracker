@@ -48,7 +48,7 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
 
     if get_country:
 
-        geolocator = Nominatim(user_agent="my-application",timeout=3).reverse(f'{location["latitude"]},{location["longitude"]}',language='en')
+        geolocator = Nominatim(user_agent="liveiss-application",timeout=3).reverse(f'{location["latitude"]},{location["longitude"]}',language='en')
         
         try:
             country = geolocator.raw['address']['country']
