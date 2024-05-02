@@ -109,14 +109,14 @@ ifneq ($(shell docker ps -q --filter="name=python_app"),)
 	@printf "[$(OKGREEN)INFO$(ENDC)] Removing python test container\n"
 	@docker stop python_app && docker rm python_app || printf "[$(OKGREEN)INFO$(ENDC)] No running Python container for test\n"
 endif
-	@printf "[$(OKGREEN)INFO$(ENDC)] Removing docker-compose containers\n"
+	@printf "[$(OKGREEN)INFO$(ENDC)] Removing docker compose containers\n"
 	@if [ -d "$(TOPDIR)/target" ]; then \
-		printf "[$(OKGREEN)INFO$(ENDC)] Stopping docker-compose\n"; \
-		docker-compose down; \
+		printf "[$(OKGREEN)INFO$(ENDC)] Stopping docker compose\n"; \
+		docker compose down; \
 		else \
 		printf "[$(OKGREEN)INFO$(ENDC)] Getting resource to stop\n"; \
 		make generate; \
-		docker-compose down; \
+		docker compose down; \
 		make clean; \
 	fi
 
@@ -157,7 +157,7 @@ generate:
 	@mvn -s .m2/settings.xml exec:exec@generate-package #$(MAVEN_COMPOSE_ARGS)
 
 launch:
-	@printf "[$(OKGREEN)INFO$(ENDC)] Bringing up containers - docker-compose\n"
+	@printf "[$(OKGREEN)INFO$(ENDC)] Bringing up containers - docker compose\n"
 	@if [ ! -d "$(TOPDIR)/target" ]; then \
 		make generate; \
 	fi
@@ -168,19 +168,19 @@ launch:
 		printf "[$(OKGREEN)INFO$(ENDC)] Using local image if present.\n"; \
 		fi;
 	@$$(sed -i 's#image: ghcr.io.*#image: $(REPO_URL)/liveisstracker:$(branch_snapshot_name)#g' docker-compose.yml)
-	@docker-compose --compatibility up -d 
+	@docker compose --compatibility up -d 
 	@$$(sed -i 's#image: ghcr.io.*#image: ghcr.io.image#g' docker-compose.yml)
 
 
 help:
 	@printf "$(BOLDYELLOW)Main targets:$(ENDC) $(BOLDCYAN)Live ISS Tracker$(ENDC)\n"
 	@printf "$(OKGREEN)clean     		$(ENDC): Clean mvn target folder\n"
-	@printf "$(OKGREEN)stop      		$(ENDC): Stop all containers and bring down docker-compose if up\n"
-	@printf "$(OKGREEN)dk_compose_tests	$(ENDC): Launch the application successfully in docker-compose mode\n"
+	@printf "$(OKGREEN)stop      		$(ENDC): Stop all containers and bring down docker compose if up\n"
+	@printf "$(OKGREEN)dk_compose_tests	$(ENDC): Launch the application successfully in docker compose mode\n"
 	@printf "$(OKGREEN)run_python_tests	$(ENDC): Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass.\n"
 	@printf "$(OKGREEN)run_streamlit		$(ENDC): Runs the Streamlit server on the container.\n"
 	@printf "$(OKGREEN)package   		$(ENDC): Builds docker images and pushes to GITLAB registry\n"
 	@printf "$(OKGREEN)deep_clean		$(ENDC): Cleans mvn target folder, removes docker volumes, containers and images matching 'liveisstracker' & 'python-hellomaven'\n"
-	@printf "$(OKGREEN)launch    		$(ENDC): Generates resources and brings the docker-compose up 'builds images'\n"
+	@printf "$(OKGREEN)launch    		$(ENDC): Generates resources and brings the docker compose up 'builds images'\n"
 	@printf "$(OKGREEN)help      		$(ENDC): show this help\n"
 
