@@ -57,14 +57,14 @@ def main():
                 pass
             st.plotly_chart(fig)
 
-        st.write("Predict next ISS pass through by city")
-        predict_city = st.text_input('Enter city name',value='London')
+        # st.write("Predict next ISS pass through by city")
+        # predict_city = st.text_input('Enter city name',value='London')
         
-        if predict_city:
-            _, predict_city_lat, predict_city_lon = get_city_location(predict_city)
+        # if predict_city:
+        #     _, predict_city_lat, predict_city_lon = get_city_location(predict_city)
 
-            pass_information=iss.get_pass_info_from_lat_lon(predict_city_lat,predict_city_lon)
-            display_pass_statistics(pass_information)
+        #     pass_information=iss.get_pass_info_from_lat_lon(predict_city_lat,predict_city_lon)
+        #     display_pass_statistics(pass_information)
 
 
     except Exception as e:
