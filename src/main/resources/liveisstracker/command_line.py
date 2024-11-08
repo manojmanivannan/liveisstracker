@@ -30,15 +30,9 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
         print(f'https://maps.google.com/?q={location["latitude"]},{location["longitude"]}&ll={location["latitude"]},{location["longitude"]}&z=4')
 
     if get_iss_speed:
-        location_0 = location
-        sleep(2)
-        location_1 = TrackerISS(silent=True).gps_location
-        time_diff = location_1['timestamp'] - location_0['timestamp']
-        distance = geodesic((location_0['latitude'],location_0['longitude']),
-                            (location_1['latitude'],location_1['longitude'])).km
-
         try:
-            speed = distance/time_diff*3600 # km/h
+            # speed = distance/time_diff*3600 # km/h
+            speed = location['speed']
         except ZeroDivisionError:
             speed = 0
         except  Exception as e:

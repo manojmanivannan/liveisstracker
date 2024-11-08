@@ -61,7 +61,7 @@ class BasemapPlot:
             self.gps_location['longitude']), language='en')
         try:
             country = location.raw['address']['country']
-        except KeyError:
+        except (KeyError,AttributeError):
             country = 'the ocean'
 
         plt.title('ISS is currently above {} \n \

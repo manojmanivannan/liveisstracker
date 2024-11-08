@@ -40,7 +40,8 @@ class TrackerISS:
     lat_pre = 0
     lon_pre = 0
     timestamp_pre = 0
-    iss_link = 'http://api.open-notify.org/iss-now.json'
+    # iss_link = 'http://api.open-notify.org/iss-now.json'
+    iss_link = 'https://api.wheretheiss.at/v1/satellites/25544'
     pass_link = 'http://api.open-notify.org/iss-pass.json?lat=LAT&lon=LON'
 
     def __init__(self,silent=False):
@@ -50,6 +51,7 @@ class TrackerISS:
         self.timestamp = self.gps_location['timestamp']
         self.latitude = self.gps_location['latitude']
         self.longitude = self.gps_location['longitude']
+        self.speed = self.gps_location['speed']
 
         try:
             logger.info('Establishing connection to DB') if not self.silent else None
@@ -83,11 +85,13 @@ class TrackerISS:
                 logger.info('Getting ISS stat') if not silent else None
                 response = url.urlopen(TrackerISS.iss_link)
             json_res = json.loads(response.read())
-            geo_location = json_res['iss_position']
+            # geo_location = json_res['iss_position']
             timestamp = json_res['timestamp']
-            lon, lat = float(geo_location['longitude']), float(geo_location['latitude'])
-            logger.debug(f"Current ISS location at {ctime(int(timestamp))}: latitude: {lat}, longitude: {lon}")
-            return {'timestamp':timestamp, 'latitude': lat,'longitude': lon}
+            lon, lat = float(json_res['longitude']), float(json_res['latitude'])
+            speed = float(json_res['velocity'])
+            logger.debug(f"Current ISS location at {ctime(int(timestamp))}: latitude: {lat}, longitude: {lon}, travelling at {speed:.2f}")
+            
+            return {'timestamp':timestamp, 'latitude': lat,'longitude': lon, 'speed':speed}
         except URLError as e:
             raise e
     
@@ -129,13 +133,14 @@ class TrackerISS:
         # global lat_pre,lon_pre, self.timestamp_pre
 
         iss = (self.latitude, self.longitude)
-        time_diff = self.timestamp - self.timestamp_pre
-        distance = geodesic((self.lat_pre,self.lon_pre),iss).km
-        self.lat_pre,self.lon_pre = iss
-        self.timestamp_pre = self.timestamp
+        # time_diff = self.timestamp - self.timestamp_pre
+        # distance = geodesic((self.lat_pre,self.lon_pre),iss).km
+        # self.lat_pre,self.lon_pre = iss
+        # self.timestamp_pre = self.timestamp
 
         try:
-            speed = distance/time_diff*3600 # km/h
+            # speed = distance/time_diff*3600 # km/h
+            speed = gps_location['speed']
         except ZeroDivisionError:
             speed = 0
         except  Exception as e:
