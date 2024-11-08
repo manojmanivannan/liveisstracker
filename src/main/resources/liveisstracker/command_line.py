@@ -52,7 +52,7 @@ def main(get_iss_location,get_iss_speed,get_country,plot_iss):
         
         try:
             country = geolocator.raw['address']['country']
-        except KeyError:
+        except (KeyError,AttributeError):
             country = 'the ocean'
 
         print(f'Internaionl Space Station is currently above {country}')
