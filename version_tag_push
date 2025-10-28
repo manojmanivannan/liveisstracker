@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Stop on any error
+set -e
+
+# 1. Print current version
+current_version=$(uv version | awk '{print $2}')
+echo "Current version: $current_version"
+
+# 2. Ask for bump choice
+echo "
+Choose a version bump:"
+options=("major" "minor" "patch" "stable" "alpha" "beta" "rc" "post" "dev")
+select choice in "${options[@]}"; do
+    if [[ " ${options[@]} " =~ " ${choice} " ]]; then
+        break
+    else
+        echo "Invalid choice. Please select a number from the list."
+    fi
+done
+
+# 3. Bump the version
+echo "
+Bumping version with '$choice'..."
+uv version --bump "$choice"
+
+# 4. Get the new version
+new_version=$(uv version | awk '{print $2}')
+echo "New version: $new_version"
+
+# 5. Create git tag
+tag_name="v$new_version"
+echo "
+Creating git tag: $tag_name"
+git tag -a "$tag_name" -m "Release $tag_name"
+
+# 6. Push tags
+echo "
+Pushing tags to remote..."
+git push --tags
+
+echo "
+Done."
