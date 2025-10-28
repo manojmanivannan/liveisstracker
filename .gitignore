@@ -9,3 +9,4 @@ config.toml
 /venv
 /.vscode
 map_secret.txt
+dist/
