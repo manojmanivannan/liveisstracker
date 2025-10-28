@@ -31,7 +31,7 @@ echo "New version: $new_version"
 # 5. Commit and push the version bump
 echo "
 Committing and pushing pyproject.toml..."
-git add pyproject.toml
+git add pyproject.toml uv.lock
 git commit -m "Bump version to $new_version"
 git push
 
