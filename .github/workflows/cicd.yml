@@ -6,9 +6,8 @@ on:
       - 'develop'
       - 'feature/**'
       - 'bugfix/**'
-      - 'pythonize'
     tags:
-      - 'v*'
+      - '*'
   pull_request:
     branches:
       - "*"
