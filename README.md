@@ -63,3 +63,17 @@ To contribute to the development of this project, you can set it up locally:
     # Get the location
     ./run.sh location
     ```
+
+---
+
+### Versioning and Releasing
+
+This project includes an interactive script to simplify the process of versioning and creating new releases.
+
+To create a new version, run:
+
+```bash
+./version_tag_push
+```
+
+This script will guide you through bumping the version number, creating a new Git tag, and pushing the tag to the remote repository. Pushing a new tag will automatically trigger the GitHub Actions workflow to publish the new version to PyPI.
