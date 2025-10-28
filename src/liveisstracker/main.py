@@ -5,7 +5,7 @@ This script starts the Dash/Flask server in a separate thread
 and then creates a pywebview window to display the application.
 """
 
-import threading
+import multiprocessing
 import webview
 import typer
 from .app import app
@@ -20,16 +20,20 @@ def run_server():
 @cli.command()
 def run():
     """Runs the ISS Tracker GUI application."""
-    # Run the server in a separate thread
-    server_thread = threading.Thread(target=run_server)
-    server_thread.daemon = True
-    server_thread.start()
+    server_process = multiprocessing.Process(target=run_server)
+    server_process.daemon = True
+    server_process.start()
 
     class Api:
+        def __init__(self, server_process):
+            self.server_process = server_process
+
         def close_window(self):
+            if self.server_process:
+                self.server_process.terminate()
             webview.windows[0].destroy()
 
-    api = Api()
+    api = Api(server_process)
 
     # Create and start the webview window
     webview.create_window(
@@ -40,6 +44,7 @@ def run():
         height=900
     )
     webview.start()
+
 
 @cli.command()
 def location():
