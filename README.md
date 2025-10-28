@@ -1,27 +1,34 @@
 # Live ISS Tracker
 
-🛰️ A simple desktop application that tracks and displays the real-time location of the International Space Station on an interactive 3D globe.
+🛰️ A simple desktop application and CLI that tracks the real-time location of the International Space Station.
 
 ![sample application](output-streamlit.gif)
 
 ## Quick Start
 
-To run the application, make sure you have a modern version of Python and `uv` installed, then simply run:
+This application provides two main commands:
+*   `run`: Launches the interactive 3D globe in a desktop window.
+*   `location`: Prints the current latitude and longitude of the ISS to the console.
+
+To use these commands, make sure you have a modern version of Python and `uv` installed, then simply run:
 
 ```bash
-uvx liveisstracker
-```
+# To run the GUI application
+uvx --from liveisstracker run
 
-This command will download, install, and run the application in a temporary virtual environment.
+# To get the current location in your terminal
+uvx --from liveisstracker location
+```
 
 ## Other Ways to Run
 
 ### Using `pipx`
 
-If you have `pipx` installed, you can use it to run the application in an isolated environment:
+If you have `pipx` installed, you can use it to run the commands in an isolated environment:
 
 ```bash
-pipx run liveisstracker
+pipx run --spec liveisstracker run
+pipx run --spec liveisstracker location
 ```
 
 ### Using `pip`
@@ -32,8 +39,9 @@ You can also install the package directly into your Python environment using `pi
 # Install the package
 pip install liveisstracker
 
-# Run the application
-liveisstracker
+# Run the commands
+liveisstracker run
+liveisstracker location
 ```
 
 ## Development
@@ -46,8 +54,12 @@ To contribute to the development of this project, you can set it up locally:
     cd liveisstracker
     ```
 
-2.  **Run the application:**
-    The included `run.sh` script uses `uv` to install dependencies and run the app in a local virtual environment.
+2.  **Run the application commands:**
+    The included `run.sh` script uses `uv` to install dependencies and run the app in a local virtual environment. You can pass the subcommands to it:
     ```bash
-    ./run.sh
+    # Run the GUI
+    ./run.sh run
+
+    # Get the location
+    ./run.sh location
     ```

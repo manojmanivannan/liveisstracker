@@ -7,13 +7,19 @@ and then creates a pywebview window to display the application.
 
 import threading
 import webview
+import typer
 from .app import app
+from .data import get_iss_location
+
+cli = typer.Typer()
 
 def run_server():
     """Run the Dash/Flask server."""
     app.run(host='127.0.0.1', port=8050)
 
-def main():
+@cli.command()
+def run():
+    """Runs the ISS Tracker GUI application."""
     # Run the server in a separate thread
     server_thread = threading.Thread(target=run_server)
     server_thread.daemon = True
@@ -34,6 +40,19 @@ def main():
         height=900
     )
     webview.start()
+
+@cli.command()
+def location():
+    """Prints the current ISS location and exits."""
+    iss_data = get_iss_location()
+    if iss_data:
+        print(f"Latitude: {iss_data['latitude']}")
+        print(f"Longitude: {iss_data['longitude']}")
+    else:
+        print("Could not retrieve ISS location.")
+
+def main():
+    cli()
 
 if __name__ == '__main__':
     main()
