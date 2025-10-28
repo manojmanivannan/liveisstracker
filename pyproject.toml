@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-liveisstracker = "liveisstracker.main:main"
+iss = "liveisstracker.main:main"
 
 [build-system]
 requires = ["hatchling"]

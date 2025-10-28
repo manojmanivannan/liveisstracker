@@ -14,10 +14,10 @@ To use these commands, make sure you have a modern version of Python and `uv` in
 
 ```bash
 # To run the GUI application
-uvx --from liveisstracker run
+uvx --from liveisstracker iss run
 
 # To get the current location in your terminal
-uvx --from liveisstracker location
+uvx --from liveisstracker iss location
 ```
 
 ## Other Ways to Run
@@ -27,8 +27,8 @@ uvx --from liveisstracker location
 If you have `pipx` installed, you can use it to run the commands in an isolated environment:
 
 ```bash
-pipx run --spec liveisstracker run
-pipx run --spec liveisstracker location
+pipx run --spec liveisstracker iss run
+pipx run --spec liveisstracker iss location
 ```
 
 ### Using `pip`
@@ -40,8 +40,8 @@ You can also install the package directly into your Python environment using `pi
 pip install liveisstracker
 
 # Run the commands
-liveisstracker run
-liveisstracker location
+iss run
+iss location
 ```
 
 ## Development
