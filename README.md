@@ -1,106 +1,65 @@
-![sample application](output-streamlit.gif)
-
-
 # Live ISS Tracker
 
-Liveisstracker is a containerized application which tracks and shows the current location of Internation Space Station on an orthographic world plot.
-Visit [this](https://share.streamlit.io/manojmanivannan/liveisstracker-streamlit/track_iss.py) interactive page to view the application running on cloud, thanks to Streamlit cloud.
+🛰️ A simple desktop application and CLI that tracks the real-time location of the International Space Station.
 
-#### Background
+![sample application](output-streamlit.gif)
 
-A project started as a way to learn how real world projects are developed and deployed into production.
-It also serves as a template for creating a python project, build using docker containers, docker-compose and the use of maven. It also includes gitlab continuous integration.
+## Quick Start
 
-# Make commands
+This application provides two main commands:
+*   `run`: Launches the interactive 3D globe in a desktop window.
+*   `location`: Prints the current latitude and longitude of the ISS to the console.
 
-##  Build and Package
-This command will build the docker images defined in the docker-compose.yml file, pushes the application image (python), defined in Dockerfile, to gitlab repository
-```
-make clean package
-```
+To use these commands, make sure you have a modern version of Python and `uv` installed, then simply run:
 
-## Run the project
-To render maps using mapbox, you need an access token. Follow instructions [here](https://docs.mapbox.com/help/getting-started/access-tokens/). You can use create a free account and get a public access token. Save the public token in your project directory as ```map_secret.txt```. 
-This command will run the docker-compose.yml and brings up the application (docker containers) in the background.
-```
-make clean launch
-```
-then go to your web browser at ```localhost:8501``` to view the application
+```bash
+# To run the GUI application
+uvx --from liveisstracker run
 
-## Help
-Check other targets using help ```make help```
-```
-Main targets: LIVE_ISS_TRACKER
-clean                   : Clean mvn target folder
-stop                    : Stop all containers and bring down docker-compose if up
-dk_compose_tests        : Launch the application successfully in docker-compose mode
-run_python_tests        : Run python package test. SKIP_REMOVE_CONTAINER=true to skip removing the docker container if tests pass.
-run_streamlit           : Runs the Streamlit server on the container.
-package                 : Builds docker images and pushes to GITLAB registry
-deep_clean              : Cleans mvn target folder, removes docker volumes, containers and images matching 'liveisstracker'
-launch                  : Generates resources and brings the docker-compose up 'builds images'
-help                    : show this help
+# To get the current location in your terminal
+uvx --from liveisstracker location
 ```
 
-## Environment setup
+## Other Ways to Run
 
-### Installation on windows
+### Using `pipx`
 
-#### For Maven and Java
+If you have `pipx` installed, you can use it to run the commands in an isolated environment:
 
-Steps followed to install java and maven on a windows machine
-
-1. Download binary zip archive for Maven from [here](https://maven.apache.org/download.cgi)
-2. Download Windows compressed archive for Java from [here](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)
-3. Extract both in ```C:\dev\tools``` in their own folders
-4. Add system variables
-    1. ```JAVA_HOME``` pointing to folder ```C:\dev\tools\jdk-folder```
-    2. ```MAVEN_HOME``` pointing to folder ```C:\dev\tools\maven-folder```
-5. Edit system variable 'PATH'. Add two new entries ```%JAVA_HOME%\bin``` and ```%MAVEN_HOME%\bin```
-
-verify java by opening new command prompt and typing ```java --version``` and ```mvn --version``` for maven
-
-#### For Docker
-
-Install docker cli from [here](https://docs.docker.com/toolbox/toolbox_install_windows/)
-
-#### For Make
-
-```make``` is a GNU command so the only way you can get it on Windows is installing a Windows version like the one provided by [GNUWin32](http://gnuwin32.sourceforge.net/packages/make.htm). Or you can install [MinGW](http://www.mingw.org/) and then do: ```copy c:\MinGW\bin\mingw32-make.exe c:\MinGW\bin\make.exe```. Then update the PATH to include the bin directory of the make.exe.
-
-### Installation on Linux
-
-Java and Maven can be setup by installing maven alone, which will pull its java dependency
-
-```sudo apt-get install maven``` for debian/ubuntu
-
-## CLI Release 
-
-This project also generates a command line utility that can be installed from https://pypi.org/project/liveisstracker/ .
-
-```pip install liveisstracker```
-
-```
-  Usage: liveisstracker [OPTIONS]
-
-  liveisstracker can get location,speed and pass-over country based on
-  current location of International Space Station
-
-  Options:
-  -i, --get-iss-location       Get the current location of International Space
-                                  Station + Google MAP URL
-  -s, --get-iss-speed          Get the current ground speed of International
-                                  Space Station
-  -c, --get-country            Get the country above which the ISS is current
-                                  passing over
-  -p, --plot-iss FILENAME.png  Plot the current position of International
-                                  Space Station on a map
-  -h, --help                   Show this message and exit.
+```bash
+pipx run --spec liveisstracker run
+pipx run --spec liveisstracker location
 ```
 
+### Using `pip`
+
+You can also install the package directly into your Python environment using `pip`:
+
+```bash
+# Install the package
+pip install liveisstracker
+
+# Run the commands
+liveisstracker run
+liveisstracker location
 ```
-$ liveisstracker -i -s
-Timestamp (UTC): 2021-11-17 15:52:05 ISS is at Lat:24.6399 Lon:30.1919
-https://maps.google.com/?q=24.6399,30.1919&ll=24.6399,30.1919&z=3
-Ground Speed of International Space Station is ~ 24833.19 Km/h
-```
+
+## Development
+
+To contribute to the development of this project, you can set it up locally:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/manojmanivannan/liveisstracker.git
+    cd liveisstracker
+    ```
+
+2.  **Run the application commands:**
+    The included `run.sh` script uses `uv` to install dependencies and run the app in a local virtual environment. You can pass the subcommands to it:
+    ```bash
+    # Run the GUI
+    ./run.sh run
+
+    # Get the location
+    ./run.sh location
+    ```

@@ -1,3 +1,4 @@
+# Existing user rules
 /target
 .project
 .pydevproject
@@ -5,7 +6,95 @@
 /.settings
 /builds
 config.toml
-/.idea
-/venv
-/.vscode
 map_secret.txt
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+# These files are usually written by a python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Flask stuff:
+.flaskenv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual environment
+.venv/
+venv/
+env/
+*/venv/
+*/env/
+
+# IDE-specific files
+.idea/                  # PyCharm
+.vscode/                # VS Code
+*.sublime-project       # Sublime Text
+*.sublime-workspace
+.ropeproject             # Rope
+
+# OS-specific files
+.DS_Store
+.Trashes
+Thumbs.db
+
+# MyPy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Snyk
+.dccache
+
+# Environments
+.env
