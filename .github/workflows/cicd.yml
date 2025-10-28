@@ -2,15 +2,21 @@ name: CI/CD
 
 on:
   push:
+    branches:
+      - 'develop'
+      - 'feature/**'
+      - 'bugfix/**'
     tags:
-      # Publish on any tag starting with a `v`, e.g., v0.1.0
-      - v*
+      - '*'
+  pull_request:
+    branches:
+      - "*"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: liveisstracker
     permissions:
       id-token: write
       contents: read
