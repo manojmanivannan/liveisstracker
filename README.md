@@ -2,7 +2,7 @@
 
 🛰️ A simple desktop application and CLI that tracks the real-time location of the International Space Station.
 
-![sample application](output-streamlit.gif)
+https://github.com/user-attachments/assets/6284dc17-650c-485c-b73b-92c596f66a4a
 
 ## Quick Start
 
